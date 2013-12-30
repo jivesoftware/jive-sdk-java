@@ -1,0 +1,68 @@
+{
+    "integrationUser": {
+        "systemAdmin": false
+    },
+    "tiles": [{
+        "sampleData": {
+            "title": "samplelist list",
+            "contents": [
+                {
+                    "text": "Loading..."
+                }
+            ],
+            "config": {
+                "listStyle": "contentList"
+            }
+        },
+        "displayName": "sample list",
+        "name": "samplelist",
+        "description": "this is a sample list example",
+        "style": "LIST",
+        "icons": {
+            "16": "https://community.jivesoftware.com/servlet/JiveServlet/showImage/102-99994-1-1023036/j.png",
+            "48": "https://community.jivesoftware.com/servlet/JiveServlet/showImage/102-99994-1-1023036/j.png",
+            "128": "https://community.jivesoftware.com/servlet/JiveServlet/showImage/102-99994-1-1023036/j.png"
+        },
+        "action": "http://localhost:8099/samplelist/action",
+        "id": "d997601f-46cc-4a28-9309-1445c732fc1e",
+        "definitionDirName": "samplelist",
+        "published": "2013-02-28T15:12:16.768-0800",
+        "updated": "2013-02-28T15:12:16.768-0800",
+        "config": "http://localhost:8099/web/samplelist/configure.html",
+        "unregister": "http://localhost:8099/tile/unregister",
+        "register": "http://localhost:8099/tile/register"
+    },{
+        "sampleData": {
+            "title": "sampletable",
+            "contents": [
+                {
+                    "name": "Loading...",
+                    "value": "Loading..."
+                }
+            ],
+            "config": {
+                "listStyle": "table"
+            }
+
+        },
+        "displayName": "JavaSDK Sample Table Tile",
+        "name": "sampletable",
+        "description": "This is a sample tile using the table style.",
+        "style": "TABLE",
+        "icons": {
+            "16": "https://community.jivesoftware.com/servlet/JiveServlet/showImage/102-99994-1-1023036/j.png",
+            "48": "https://community.jivesoftware.com/servlet/JiveServlet/showImage/102-99994-1-1023036/j.png",
+            "128": "https://community.jivesoftware.com/servlet/JiveServlet/showImage/102-99994-1-1023036/j.png"
+        },
+        "action": "http://localhost:8099/samplelist/action",
+        "id": "d997601f-46cc-4a28-9309-1445c732fcbb",
+        "definitionDirName": "sampletable",
+        "config": "http://localhost:8099/web/sampletable/configure.html",
+        "unregister": "http://localhost:8099/tile/unregister",
+        "register": "http://localhost:8099/tile/register"
+    }],
+    "templates": [ ],
+    "osapps": [ ],
+    "storageDefinitions": [],
+    "jabCartridges": []
+}
