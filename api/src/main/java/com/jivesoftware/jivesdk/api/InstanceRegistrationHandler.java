@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 public interface InstanceRegistrationHandler {
     RegisteredInstance register(@Nonnull InstanceRegistrationRequest request);
     RegisteredInstance getByTenantId(String tenantId);
-    void register(@Nonnull RegistrationRequest request);
+    void register(@Nonnull TileRegistrationRequest request);
 
 	/**
 	 * The object was updated and should be re-persisted.

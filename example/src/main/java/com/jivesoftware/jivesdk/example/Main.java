@@ -83,6 +83,11 @@ public class Main {
 			SampleTableTile sampleTableTile =  serviceLocator.createAndInitialize(SampleTableTile.class);
 			sampleTableTile.setTileInstance(tileInstance);
 			ret = sampleTableTile;
+		} else if (tileInstance.getTileDefName().equals("sampleactivity")) {
+			SampleActivity sampleTableTile =  serviceLocator.createAndInitialize(SampleActivity.class);
+			sampleTableTile.setTileInstance(tileInstance);
+			ret = sampleTableTile;
+
 		} else {
 			log.error("Unknown tileInstance type '" + tileInstance.getTileDefName() + "'");
 		}

@@ -20,7 +20,7 @@ public class TileInstance  {
     public TileInstance() {
     }
 
-    public TileInstance(RegistrationRequest request) {
+    public TileInstance(TileRegistrationRequest request) {
         this.tempToken = request.getTempToken();
         this.config = request.getConfig();
         this.jivePushUrl = request.getJivePushUrl();

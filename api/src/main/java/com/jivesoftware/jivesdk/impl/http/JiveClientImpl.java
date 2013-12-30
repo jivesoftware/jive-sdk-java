@@ -3,6 +3,7 @@ package com.jivesoftware.jivesdk.impl.http;
 import com.google.common.base.Optional;
 import com.google.common.collect.Sets;
 import com.jivesoftware.jivesdk.api.*;
+import com.jivesoftware.jivesdk.api.tiles.ActivityData;
 import com.jivesoftware.jivesdk.api.tiles.TileData;
 import com.jivesoftware.jivesdk.impl.http.post.RestPostRequestBuilder;
 import com.jivesoftware.jivesdk.impl.http.put.RestPutRequestBuilder;
@@ -51,8 +52,38 @@ public class JiveClientImpl implements JiveClient {
 	}
 
 	@Override
-    public boolean sendExternalStreamActivity(RegisteredInstance instance, @Nonnull TileInstance item,
-											  @Nonnull HttpEntity data)
+	public boolean sendExternalStreamComment(@Nonnull TileInstance item, @Nonnull ActivityData data,
+											 @Nonnull String parentId) throws TileUninstalledException,
+			InvalidRequestException, IOException {
+		String json = objectMapper.writeValueAsString(data);
+
+		return sendExternalStreamComment(item, json, parentId);
+	}
+
+	@Override
+	public boolean sendExternalStreamActivity(@Nonnull TileInstance item, @Nonnull ActivityData data) throws
+			TileUninstalledException, InvalidRequestException, IOException {
+		Map<String, ActivityData> map = new HashMap<String, ActivityData>();
+		map.put("activity", data);
+		String json = objectMapper.writeValueAsString(map);
+
+		return sendExternalStreamActivity(item, json);
+	}
+
+	@Override
+	public boolean sendExternalStreamComment(@Nonnull TileInstance item, @Nonnull String data,
+											 @Nonnull String parentId) throws TileUninstalledException,
+			InvalidRequestException {
+		return sendExternalStreamComment(item, new StringEntity(data, ContentType.APPLICATION_JSON), parentId);
+	}
+
+	@Override
+	public boolean sendExternalStreamActivity(@Nonnull TileInstance item, @Nonnull String data) throws
+			TileUninstalledException, InvalidRequestException {
+		return sendExternalStreamActivity(item, new StringEntity(data, ContentType.APPLICATION_JSON));
+	}
+
+	protected boolean sendExternalStreamActivity(@Nonnull TileInstance item, @Nonnull HttpEntity data)
 			throws InvalidRequestException, TileUninstalledException {
 		String itemUrl = item.getJivePushUrl();
         String url = DealRoomUtils.createUrl(itemUrl, PATH_ACTIVITIES);
@@ -73,11 +104,9 @@ public class JiveClientImpl implements JiveClient {
         return false;
     }
 
-    public boolean sendExternalStreamComment(RegisteredInstance instance, @Nonnull TileInstance item,
-											 @Nonnull HttpEntity data,
-											 @Nonnull String parentId) throws
 
-			InvalidRequestException, TileUninstalledException {
+    protected boolean sendExternalStreamComment(@Nonnull TileInstance item, @Nonnull HttpEntity data, @Nonnull String parentId)
+			throws InvalidRequestException, TileUninstalledException {
         String path = String.format(TEMPLATE_PATH_EXT_COMMENTS, parentId);
 		String itemUrl = item.getJivePushUrl();
         String url = DealRoomUtils.createUrl(itemUrl, path);
@@ -112,8 +141,7 @@ public class JiveClientImpl implements JiveClient {
 		return sendPutTileUpdate(tileInstance, new StringEntity(data, ContentType.APPLICATION_JSON));
 	}
 	
-    @Override
-    public boolean sendPutTileUpdate(TileInstance tileInstance, @Nonnull HttpEntity data)
+    protected boolean sendPutTileUpdate(TileInstance tileInstance, @Nonnull HttpEntity data)
 			throws InvalidRequestException, TileUninstalledException {
 		String itemUrl = tileInstance.getJivePushUrl();
         RestPutRequestBuilder request = RestRequestFactory.createPutRequestBuilder(itemUrl)
@@ -123,19 +151,6 @@ public class JiveClientImpl implements JiveClient {
         HttpResponse response = sendItemToJive(request, tileInstance, LOG_DATA_SENDING_MESSAGE,
 				EXPECTED_RESPONSES_TILE_UPDATE);
         return response != null && EXPECTED_RESPONSES_TILE_UPDATE.contains(response.getStatusCode());
-    }
-
-    @Override
-    public boolean sendTilePutStatusUpdate(@Nonnull TileInstance item, @Nonnull HttpEntity data,
-										   RegisteredInstance instance)
-            throws TileUninstalledException, InvalidRequestException {
-		String itemUrl = item.getJivePushUrl();
-        RestPutRequestBuilder request = RestRequestFactory.createPutRequestBuilder(itemUrl)
-                .withEntity(data)
-                .withOAuth(item.getCredentials().getAuthToken());
-
-        HttpResponse response = sendItemToJive(request, item, LOG_STATUS_UPDATE_SENDING_MESSAGE, EXPECTED_RESPONSES_STATUS_UPDATE);
-        return response != null && EXPECTED_RESPONSES_STATUS_UPDATE.contains(response.getStatusCode());
     }
 
     @Nullable

@@ -2,7 +2,7 @@ package com.jivesoftware.jivesdk.server.endpoints;
 
 import com.jivesoftware.jivesdk.api.InstanceRegistrationHandler;
 import com.jivesoftware.jivesdk.api.JiveSDKManager;
-import com.jivesoftware.jivesdk.api.RegistrationRequest;
+import com.jivesoftware.jivesdk.api.TileRegistrationRequest;
 import com.jivesoftware.jivesdk.impl.PropertyConfiguration;
 import com.jivesoftware.jivesdk.impl.utils.DealRoomUtils;
 import com.jivesoftware.jivesdk.server.AuthenticationResponse;
@@ -52,12 +52,12 @@ public class RegistrationEndpointsImpl extends AbstractEndpoint  {
     @Path(ServerConstants.Endpoints.REGISTER)
     @Produces(MediaType.APPLICATION_JSON)
     public Response register(@HeaderParam(HttpHeaders.AUTHORIZATION) String authorization,
-                             RegistrationRequest registrationRequest) {
+                             TileRegistrationRequest tileRegistrationRequest) {
         try {
-            log.debug("Received registration request: " + registrationRequest);
+            log.debug("Received registration request: " + tileRegistrationRequest);
 
-            String jiveInstanceUrl = registrationRequest.getJiveInstanceUrl();
-            String tenantId = registrationRequest.getTenantId();
+            String jiveInstanceUrl = tileRegistrationRequest.getJiveInstanceUrl();
+            String tenantId = tileRegistrationRequest.getTenantId();
             if (!DealRoomUtils.isAllExist(jiveInstanceUrl, tenantId)) {
                 String msg = String.format("Jive instance URL [%s] / Tenant ID [%s] are missing from V2 registration request", jiveInstanceUrl, tenantId);
                 log.warn(msg);
@@ -65,28 +65,28 @@ public class RegistrationEndpointsImpl extends AbstractEndpoint  {
 
             AuthenticationResponse authResponse = authenticateV2Request(authorization, jiveInstanceUrl, tenantId);
             if (!authResponse.isAuthenticated()) {
-                log.error("Registration request unauthorized: " + registrationRequest);
+                log.error("Registration request unauthorized: " + tileRegistrationRequest);
                 return Response.status(authResponse.getStatusCode()).build();
             }
 
-            registrationRequest.setClientId(authResponse.getClientId());
-            registrationRequest.setClientSecret(authResponse.getClientSecret());
-            registrationRequest.setInstance(authResponse.getInstance());
+            tileRegistrationRequest.setClientId(authResponse.getClientId());
+            tileRegistrationRequest.setClientSecret(authResponse.getClientSecret());
+            tileRegistrationRequest.setInstance(authResponse.getInstance());
 
-            return doRegister(registrationRequest);
+            return doRegister(tileRegistrationRequest);
         } catch (Throwable t) {
             return returnResponseOnThrowable(t, FAILED_REGISTERING_DEAL_ROOM);
         }
     }
 
-    public Response doRegister(RegistrationRequest registrationRequest) {
+    public Response doRegister(TileRegistrationRequest tileRegistrationRequest) {
         try {
-            if (!DealRoomUtils.isAllExist(registrationRequest.getTempToken(), registrationRequest.getGuid(), registrationRequest.getJivePushUrl(), registrationRequest.getTileDefName())) {
-                ObjectNode errorObj = logErrorAndCreateErrorResponse("Failed registering due to bad registration request: " + registrationRequest);
+            if (!DealRoomUtils.isAllExist(tileRegistrationRequest.getTempToken(), tileRegistrationRequest.getGuid(), tileRegistrationRequest.getJivePushUrl(), tileRegistrationRequest.getTileDefName())) {
+                ObjectNode errorObj = logErrorAndCreateErrorResponse("Failed registering due to bad registration request: " + tileRegistrationRequest);
                 return Response.status(HttpStatus.SC_BAD_REQUEST).entity(errorObj).build();
             }
 
-            String itemType = registrationRequest.getItemType();
+            String itemType = tileRegistrationRequest.getItemType();
             if (StringUtils.isEmpty(itemType)) {
                 ObjectNode errorObj = logErrorAndCreateErrorResponse("Failed registering due to invalid item type: " + itemType);
                 return Response.status(HttpStatus.SC_BAD_REQUEST).entity(errorObj).build();
@@ -94,7 +94,7 @@ public class RegistrationEndpointsImpl extends AbstractEndpoint  {
 
 
             try {
-                instanceRegistrationHandler.register(registrationRequest);
+                instanceRegistrationHandler.register(tileRegistrationRequest);
             } catch (Exception e) {
                 log.error(e.toString());
                 return Response.serverError().build();

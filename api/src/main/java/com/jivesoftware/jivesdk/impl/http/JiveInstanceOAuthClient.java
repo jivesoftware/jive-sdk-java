@@ -33,13 +33,13 @@ public class JiveInstanceOAuthClient implements JiveCredentialsAcquirer, JiveOAu
 
 	@Nullable
     @Override
-    public Credentials acquireCredentials(@Nonnull RegistrationRequest registrationRequest) {
-        String jiveInstanceUrl = registrationRequest.getJiveInstanceUrl();
-        String clientId = registrationRequest.getClientId();
-        String clientSecret = registrationRequest.getClientSecret();
-        String code = registrationRequest.getTempToken();
+    public Credentials acquireCredentials(@Nonnull TileRegistrationRequest tileRegistrationRequest) {
+        String jiveInstanceUrl = tileRegistrationRequest.getJiveInstanceUrl();
+        String clientId = tileRegistrationRequest.getClientId();
+        String clientSecret = tileRegistrationRequest.getClientSecret();
+        String code = tileRegistrationRequest.getTempToken();
         if (!DealRoomUtils.isAllExist(jiveInstanceUrl, clientId, clientSecret, code)) {
-            log.error("Can't get access token due to invalid request: " + registrationRequest);
+            log.error("Can't get access token due to invalid request: " + tileRegistrationRequest);
             return null;
         }
 
@@ -54,7 +54,7 @@ public class JiveInstanceOAuthClient implements JiveCredentialsAcquirer, JiveOAu
             refreshToken = ServerConstants.NO_REFRESH_TOKEN;
         }
 
-        return new CredentialsImpl(registrationRequest.getJivePushUrl(), jiveOAuthResponse.getAccessToken(), refreshToken);
+        return new CredentialsImpl(tileRegistrationRequest.getJivePushUrl(), jiveOAuthResponse.getAccessToken(), refreshToken);
     }
 
     @Override

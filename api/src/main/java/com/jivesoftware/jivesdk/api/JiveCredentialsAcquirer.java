@@ -13,9 +13,9 @@ public interface JiveCredentialsAcquirer {
      * Responsible for acquiring credentials to push data to Jive.
      *
      *
-     * @param registrationRequest The request
+     * @param tileRegistrationRequest The request
      * @return Optional credentials, in case the request completed successfully, or Optional.absent() if not.
      */
     @Nonnull
-    Credentials acquireCredentials(@Nonnull RegistrationRequest registrationRequest);
+    Credentials acquireCredentials(@Nonnull TileRegistrationRequest tileRegistrationRequest);
 }

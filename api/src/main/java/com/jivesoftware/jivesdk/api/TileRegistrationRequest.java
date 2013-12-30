@@ -16,7 +16,7 @@ import java.util.Map;
  * Time: 2:53 PM
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RegistrationRequest {
+public class TileRegistrationRequest {
     public static final String PROPERTY_NAME_TEMP_TOKEN = "code";
     public static final String PROPERTY_NAME_CONFIG_JSON = "config";
     public static final String PROPERTY_NAME_JIVE_PUSH_URL = "url";
@@ -39,13 +39,13 @@ public class RegistrationRequest {
     private RegisteredInstance instance;
 
     @JsonCreator
-    public RegistrationRequest(@JsonProperty(PROPERTY_NAME_TEMP_TOKEN) String tempToken,
-                               @JsonProperty(PROPERTY_NAME_CONFIG_JSON) Map<String, String> config,
-                               @JsonProperty(PROPERTY_NAME_JIVE_PUSH_URL) String jivePushUrl,
-                               @JsonProperty(PROPERTY_NAME_JIVE_INSTANCE_URL) String jiveInstanceUrl,
-                               @JsonProperty(PROPERTY_NAME_TENANT_ID) String tenantId,
-                               @JsonProperty(PROPERTY_NAME_GUID) String guid,
-                               @JsonProperty(PROPERTY_NAME_ITEM_TYPE) String itemType) {
+    public TileRegistrationRequest(@JsonProperty(PROPERTY_NAME_TEMP_TOKEN) String tempToken,
+								   @JsonProperty(PROPERTY_NAME_CONFIG_JSON) Map<String, String> config,
+								   @JsonProperty(PROPERTY_NAME_JIVE_PUSH_URL) String jivePushUrl,
+								   @JsonProperty(PROPERTY_NAME_JIVE_INSTANCE_URL) String jiveInstanceUrl,
+								   @JsonProperty(PROPERTY_NAME_TENANT_ID) String tenantId,
+								   @JsonProperty(PROPERTY_NAME_GUID) String guid,
+								   @JsonProperty(PROPERTY_NAME_ITEM_TYPE) String itemType) {
         this.tempToken = tempToken;
         this.config = config;
         this.guid = guid;
@@ -120,7 +120,7 @@ public class RegistrationRequest {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        RegistrationRequest that = (RegistrationRequest) o;
+        TileRegistrationRequest that = (TileRegistrationRequest) o;
 
         return !(clientId != null ? !clientId.equals(that.clientId) : that.clientId != null) && !(clientSecret != null ? !clientSecret.equals(that.clientSecret) : that.clientSecret != null) && !(config != null ? !config.equals(that.config) : that.config != null) && !(guid != null ? !guid.equals(that.guid) : that.guid != null) && !(itemType != null ? !itemType.equals(that.itemType) : that.itemType != null) && !(jiveInstanceUrl != null ? !jiveInstanceUrl.equals(that.jiveInstanceUrl) : that.jiveInstanceUrl != null) && !(jivePushUrl != null ? !jivePushUrl.equals(that.jivePushUrl) : that.jivePushUrl != null) && !(tempToken != null ? !tempToken.equals(that.tempToken) : that.tempToken != null) && !(tenantId != null ? !tenantId.equals(that.tenantId) : that.tenantId != null) && !(tileDefName != null ? !tileDefName.equals(that.tileDefName) : that.tileDefName != null);
     }

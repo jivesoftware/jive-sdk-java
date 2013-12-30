@@ -60,6 +60,20 @@
         "config": "http://localhost:8099/web/sampletable/configure.html",
         "unregister": "http://localhost:8099/tile/unregister",
         "register": "http://localhost:8099/tile/register"
+    },
+    {
+        "displayName" : "JavaSDK Sample Activity",
+        "name" : "sampleactivity",
+        "description" : "This is a sample activity showing activity.",
+        "style" : "ACTIVITY",
+        "icons" : {
+            "16" : "https://community.jivesoftware.com/servlet/JiveServlet/showImage/102-99994-1-1023036/j.png",
+            "48" : "https://community.jivesoftware.com/servlet/JiveServlet/showImage/102-99994-1-1023036/j.png",
+            "128" : "https://community.jivesoftware.com/servlet/JiveServlet/showImage/102-99994-1-1023036/j.png"
+        },
+        "config": "http://localhost:8099/web/sampleactivity/configure.html",
+        "unregister": "http://localhost:8099/tile/unregister",
+        "register": "http://localhost:8099/tile/register"
     }],
     "templates": [ ],
     "osapps": [ ],

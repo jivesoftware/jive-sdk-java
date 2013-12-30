@@ -62,7 +62,7 @@ public class MyInstanceRegistrationHandlerImpl implements InstanceRegistrationHa
 
 	@Nonnull
 	@Override
-	public void register(@Nonnull RegistrationRequest request) {
+	public void register(@Nonnull TileRegistrationRequest request) {
 		TileInstance tileInstance = new TileInstance(request);
 		Credentials credentials = JiveSDKManager.getInstance().getJiveCredentialsAcquirer().acquireCredentials(request);
 		tileInstance.setCredentials(credentials);
@@ -77,35 +77,6 @@ public class MyInstanceRegistrationHandlerImpl implements InstanceRegistrationHa
 			scheduledThreadPoolExecutor.scheduleWithFixedDelay(tileRunnable, 1, 30,
 				TimeUnit.SECONDS);
 		}
-
-
-/* activity sample
-				"{\"activity\": {\n" +
-				"            \"action\": {\n" +
-				"                \"name\": \"posted\",\n" +
-				"                \"description\": description\n" +
-				"            },\n" +
-				"            \"actor\": {\n" +
-				"                \"name\": \"Actor Name\",\n" +
-				"                \"email\": \"actor@email.com\"\n" +
-				"            },\n" +
-				"            \"object\": {\n" +
-				"                \"type\": \"website\",\n" +
-				"                // Create a url based on the tile name and canvas view of the app.  This makes the link go into an app:\n" +
-				"                \"url\": \"/apps/{{{TILE_NAME_BASE}}}_{{{GENERATED_UUID}}}/todoDetail/\"  + encodeURIComponent(JSON.stringify({\"id\": id})),\n" +
-				"                \"image\": jive.context.config.clientUrl + \":\" +  jive.context.config.port + \"/checkbox_checked.png\",\n" +
-				"                \"title\": description,\n" +
-				"                \"description\": description\n" +
-				"            },\n" +
-				"            \"properties\": {\n" +
-				"                // This allows the group context to be exposed to the app:\n" +
-				"                \"relativeUrl\": \"true\",\n" +
-				"                // This makes the title like to the url above.\n" +
-				"                \"showGoToItemAsTitle\" :\"true\"\n" +
-				"            },\n" +
-				"            \"externalID\": '' + id + \"-\" + (new Date())" +
-				"}");
-*/
 	}
 
 	@Override

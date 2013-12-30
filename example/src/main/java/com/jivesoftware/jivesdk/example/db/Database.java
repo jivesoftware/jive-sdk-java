@@ -21,26 +21,18 @@ public class Database implements Serializable {
 
     private static File file;
 
-    private Map<String,AccessToken> accessTokens =
-            Collections.synchronizedMap(new TreeMap<String,AccessToken>());
-    private Map<String,AuthorizationCode> authorizationCodes =
-            Collections.synchronizedMap(new TreeMap<String,AuthorizationCode>());
-    private Map<String,Application> applications =
-            Collections.synchronizedMap(new TreeMap<String,Application>());
-    private Map<String,RefreshToken> refreshTokens =
-            Collections.synchronizedMap(new TreeMap<String,RefreshToken>());
-    private Map<String, String> ticketToUsers =
-            Collections.synchronizedMap(new TreeMap<String,String>());
+	private Map<String,AccessToken> accessTokens =
+			Collections.synchronizedMap(new TreeMap<String,AccessToken>());
+	private Map<String,AuthorizationCode> authorizationCodes =
+			Collections.synchronizedMap(new TreeMap<String,AuthorizationCode>());
+	private Map<String,RefreshToken> refreshTokens =
+			Collections.synchronizedMap(new TreeMap<String,RefreshToken>());
+	private Map<String, String> ticketToUsers =
+			Collections.synchronizedMap(new TreeMap<String,String>());
     private Map<String, TileInstance> tileInstances =
             Collections.synchronizedMap(new TreeMap<String,TileInstance>());
     private Map<String, TileDefinition> tileDefinitions =
             Collections.synchronizedMap(new TreeMap<String,TileDefinition>());
-    private Map<String, ExternalActivity> dealroomActivity =
-            Collections.synchronizedMap(new TreeMap<String,ExternalActivity>());
-    private Map<String, ExternalComment> dealroomComments = //Comments with an external ID
-            Collections.synchronizedMap(new TreeMap<String,ExternalComment>());
-    private Map<String, ExternalComment> jiveComments = //Comments without an external ID, keyed on jive ID.
-            Collections.synchronizedMap(new TreeMap<String,ExternalComment>());
     private Map<String, JiveInstance> jiveInstanceMap =
             Collections.synchronizedMap(new TreeMap<String, JiveInstance>());
 
@@ -61,18 +53,15 @@ public class Database implements Serializable {
 
     public void clearAll() {
         clear();
-        this.applications.clear();
         this.tileDefinitions.clear();
     }
 
     public void clear() {
-        this.accessTokens.clear();
-        this.authorizationCodes.clear();
-        this.refreshTokens.clear();
-        this.ticketToUsers.clear();
+		this.accessTokens.clear();
+		this.authorizationCodes.clear();
+		this.refreshTokens.clear();
+		this.ticketToUsers.clear();
         this.tileInstances.clear();
-        this.dealroomActivity.clear();
-        this.dealroomComments.clear();
         this.jiveInstanceMap.clear();
     }
 
@@ -84,11 +73,6 @@ public class Database implements Serializable {
     @JsonGetter
     public Map<String,AuthorizationCode> authorizationCodes() {
         return this.authorizationCodes;
-    }
-
-    @JsonGetter
-    public Map<String,Application> applications() {
-        return this.applications;
     }
 
     @JsonGetter
@@ -111,79 +95,29 @@ public class Database implements Serializable {
         return tileDefinitions;
     }
 
-    @JsonGetter
-    public Map<String, ExternalActivity> dealroomActivity() {
-        return dealroomActivity;
-    }
-
-    @JsonGetter
-    public Map<String, ExternalComment> dealroomComments() {
-        return dealroomComments;
-    }
 
     public Map<String, JiveInstance> getJiveInstanceMap() {
         return jiveInstanceMap;
     }
+	public void setAccessTokens(Map<String, AccessToken> accessTokens) {
+		this.accessTokens.clear();
+		this.accessTokens.putAll(accessTokens);
+	}
 
-    //If the comment has a Dealroom ID (id != null) only replace it if it doesn't exist, since we are the authority on dealroom comments
-    //If the comment is from Jive (id == null), then always replace, because Jive is the authority on Jive comments.
-    public void updateComment(ExternalComment comment) {
-        if (comment.getId() != null && dealroomComments.get(comment.getId()) == null) {
-            dealroomComments.put(comment.getId(), comment);
-        }
-        else if (comment.getId() == null && comment.getJiveURI() != null) {
-            jiveComments.put(comment.getJiveURI(), comment);
-        }
-        else {
-            //TODO: Error condition
-        }
-    }
+	public void setAuthorizationCodes(Map<String, AuthorizationCode> authorizationCodes) {
+		this.authorizationCodes.clear();
+		this.authorizationCodes.putAll(authorizationCodes);
+	}
 
-    public List<ExternalComment> commentsForActivity(String activityID) {
-        List<ExternalComment> comments = new ArrayList<ExternalComment>();
-        for (ExternalComment comment: dealroomComments.values()) {
-            if (comment.getParentActivityID().equals(activityID)) {
-                comments.add(comment);
-            }
-        }
-        for (ExternalComment comment: jiveComments.values()) {
-            if (comment.getParentActivityID().equals(activityID)) {
-                comments.add(comment);
-            }
-        }
-        Collections.sort(comments); //sort by date
-        return comments;
-    }
+		public void setRefreshTokens(Map<String, RefreshToken> refreshTokens) {
+		this.refreshTokens.clear();
+		this.refreshTokens.putAll(refreshTokens);
+	}
 
-    public void dealroomActivity(Map<String, ExternalActivity> dealroomActivity) {
-        this.dealroomActivity.clear();
-        this.dealroomActivity = dealroomActivity;
-    }
-
-    public void setAccessTokens(Map<String, AccessToken> accessTokens) {
-        this.accessTokens.clear();
-        this.accessTokens.putAll(accessTokens);
-    }
-
-    public void setAuthorizationCodes(Map<String, AuthorizationCode> authorizationCodes) {
-        this.authorizationCodes.clear();
-        this.authorizationCodes.putAll(authorizationCodes);
-    }
-
-    public void setApplications(Map<String, Application> applications) {
-        this.applications.clear();
-        this.applications.putAll(applications);
-    }
-
-    public void setRefreshTokens(Map<String, RefreshToken> refreshTokens) {
-        this.refreshTokens.clear();
-        this.refreshTokens.putAll(refreshTokens);
-    }
-
-    public void setTicketToUsers(Map<String, String> ticketToUsers) {
-        this.ticketToUsers.clear();
-        this.ticketToUsers.putAll(ticketToUsers);
-    }
+	public void setTicketToUsers(Map<String, String> ticketToUsers) {
+		this.ticketToUsers.clear();
+		this.ticketToUsers.putAll(ticketToUsers);
+	}
 
     public void setTileInstances(Map<String, TileInstance> tileInstances) {
         this.tileInstances.clear();
