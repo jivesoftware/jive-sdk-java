@@ -1,1 +1,5 @@
 target/
+.idea
+*.iml
+database.json
+extension.zip
