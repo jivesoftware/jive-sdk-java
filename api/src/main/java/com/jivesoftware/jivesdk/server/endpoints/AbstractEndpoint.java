@@ -1,8 +1,7 @@
 package com.jivesoftware.jivesdk.server.endpoints;
 
 import com.jivesoftware.jivesdk.api.JiveSDKManager;
-import com.jivesoftware.jivesdk.server.JiveAuthorizationValidator;
-import com.jivesoftware.jivesdk.server.JiveAuthorizationValidatorImpl;
+import com.jivesoftware.jivesdk.api.JiveAuthorizationValidator;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;

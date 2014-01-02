@@ -1,11 +1,12 @@
-package com.jivesoftware.jivesdk.server;
+package com.jivesoftware.jivesdk.impl.http;
 
 import com.google.common.collect.Maps;
 import com.jivesoftware.jivesdk.api.InstanceRegistrationHandler;
+import com.jivesoftware.jivesdk.api.JiveAuthorizationValidator;
 import com.jivesoftware.jivesdk.api.JiveSDKManager;
 import com.jivesoftware.jivesdk.api.RegisteredInstance;
 import com.jivesoftware.jivesdk.impl.utils.JiveSDKUtils;
-import com.jivesoftware.jivesdk.server.endpoints.AbstractEndpoint;
+import com.jivesoftware.jivesdk.server.AuthenticationResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;

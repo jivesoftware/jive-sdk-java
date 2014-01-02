@@ -1,4 +1,6 @@
-package com.jivesoftware.jivesdk.server;
+package com.jivesoftware.jivesdk.api;
+
+import com.jivesoftware.jivesdk.server.AuthenticationResponse;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

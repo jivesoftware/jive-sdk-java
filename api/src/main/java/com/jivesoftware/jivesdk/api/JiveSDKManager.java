@@ -3,10 +3,8 @@ package com.jivesoftware.jivesdk.api;
 import com.jivesoftware.externalclient.JiveOAuthClient;
 import com.jivesoftware.jivesdk.impl.auth.jiveauth.JiveInstanceOAuthTokenRefresher;
 import com.jivesoftware.jivesdk.impl.http.*;
-import com.jivesoftware.jivesdk.server.JiveAuthorizationValidator;
-import com.jivesoftware.jivesdk.server.JiveAuthorizationValidatorImpl;
+import com.jivesoftware.jivesdk.impl.http.JiveAuthorizationValidatorImpl;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
