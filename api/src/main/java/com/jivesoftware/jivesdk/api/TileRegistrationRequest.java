@@ -1,7 +1,7 @@
 package com.jivesoftware.jivesdk.api;
 
 import com.google.common.base.Objects;
-import com.jivesoftware.jivesdk.impl.utils.DealRoomUtils;
+import com.jivesoftware.jivesdk.impl.utils.JiveSDKUtils;
 import org.codehaus.jackson.annotate.JsonCreator;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -10,10 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
- * User: sharon
- * Date: 6/2/13
- * Time: 2:53 PM
+ * Request from jive to register a new tile instance.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TileRegistrationRequest {
@@ -51,7 +48,7 @@ public class TileRegistrationRequest {
         this.guid = guid;
 
         // Workaround to external stream url
-        this.jivePushUrl = DealRoomUtils.normalizeItemUrl(jivePushUrl);
+        this.jivePushUrl = JiveSDKUtils.normalizeItemUrl(jivePushUrl);
         this.jiveInstanceUrl = jiveInstanceUrl;
         this.tenantId = tenantId;
 

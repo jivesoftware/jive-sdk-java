@@ -3,7 +3,7 @@ package com.jivesoftware.jivesdk.server;
 import com.google.common.collect.Maps;
 import com.jivesoftware.jivesdk.api.InstanceRegistrationHandler;
 import com.jivesoftware.jivesdk.api.RegisteredInstance;
-import com.jivesoftware.jivesdk.impl.utils.DealRoomUtils;
+import com.jivesoftware.jivesdk.impl.utils.JiveSDKUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
@@ -45,7 +45,7 @@ public class JiveAuthorizationValidatorImpl implements JiveAuthorizationValidato
                 return Maps.newHashMap();
             }
 
-            paramMap.put(DealRoomUtils.decodeUrl(tokens[0]), DealRoomUtils.decodeUrl(tokens[1]));
+            paramMap.put(JiveSDKUtils.decodeUrl(tokens[0]), JiveSDKUtils.decodeUrl(tokens[1]));
         }
 
         return paramMap;
@@ -66,7 +66,7 @@ public class JiveAuthorizationValidatorImpl implements JiveAuthorizationValidato
             String jiveUrl = paramMap.get(PARAM_JIVE_URL);
             String tenantId = paramMap.get(PARAM_TENANT_ID);
             String timeStampStr = paramMap.get(PARAM_TIMESTAMP);
-            if (!DealRoomUtils.isAllExist(algorithm, clientId, jiveUrl, tenantId, timeStampStr)) {
+            if (!JiveSDKUtils.isAllExist(algorithm, clientId, jiveUrl, tenantId, timeStampStr)) {
                 log.error("Jive authorization is partial: " + paramMap);
                 return badRequest();
             }
@@ -112,7 +112,7 @@ public class JiveAuthorizationValidatorImpl implements JiveAuthorizationValidato
         SecretKeySpec secretKeySpec = new SecretKeySpec(secret, algorithm);
         Mac mac = Mac.getInstance(algorithm);
         mac.init(secretKeySpec);
-        mac.update(str.getBytes(DealRoomUtils.UTF_8));
+        mac.update(str.getBytes(JiveSDKUtils.UTF_8));
         return Base64.encodeBase64String(mac.doFinal()).replaceAll("\\s+", "");
     }
 

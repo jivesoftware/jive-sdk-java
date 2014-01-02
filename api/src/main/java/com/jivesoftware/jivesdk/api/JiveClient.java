@@ -10,27 +10,85 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Zvoykish
- * Date: 27/1/13
- * Time: 11:44 AM
+ * The API to send data to jive.  To get an instance of this use JiveSDKManager
+ * @see com.jivesoftware.jivesdk.api.JiveSDKManager
  */
 public interface JiveClient {
-    boolean sendExternalStreamActivity(@Nonnull TileInstance item, @Nonnull String data)
-            throws TileUninstalledException, InvalidRequestException;
-
-    boolean sendExternalStreamComment(@Nonnull TileInstance item, @Nonnull String data, @Nonnull String parentId)
-            throws TileUninstalledException, InvalidRequestException;
-
-    boolean sendExternalStreamActivity(@Nonnull TileInstance item, @Nonnull ActivityData data)
+	/**
+	 * Send external stream data to Jive.
+	 *
+	 * @param tileInstance The tile instance to send data to.
+	 * @param data Activity Data as object.
+	 * @return
+	 * @throws TileUninstalledException
+	 * @throws InvalidRequestException
+	 * @throws IOException
+	 */
+	boolean sendExternalStreamActivity(@Nonnull TileInstance tileInstance, @Nonnull ActivityData data)
 			throws TileUninstalledException, InvalidRequestException, IOException;
 
-    boolean sendExternalStreamComment(@Nonnull TileInstance item, @Nonnull ActivityData data, @Nonnull String parentId)
+	/**
+	 * Send external stream data to jive (as JSON string)
+	 * @param tileInstance The tile instance to send data to.
+	 * @param data  A json string containing the data to send.
+	 * @return
+	 * @throws TileUninstalledException
+	 * @throws InvalidRequestException
+	 */
+	boolean sendExternalStreamActivity(@Nonnull TileInstance tileInstance, @Nonnull String data)
+            throws TileUninstalledException, InvalidRequestException;
+
+
+	/**
+	 *  Send a comment to an existing external stream entry.
+	 *
+ 	 * @param tileInstance  The tile instance to send data to.
+	 * @param data  Activity Data as object.
+	 * @param parentId The external stream id (from ActivityData.externalID)
+	 * @return
+	 * @throws TileUninstalledException
+	 * @throws InvalidRequestException
+	 * @throws IOException
+	 */
+    boolean sendExternalStreamComment(@Nonnull TileInstance tileInstance, @Nonnull ActivityData data, @Nonnull String parentId)
 			throws TileUninstalledException, InvalidRequestException, IOException;
 
+	/**
+	 * Send a comment to an existing external stream entry.
+	 *
+	 * @param tileInstance The tile instance to send data to.
+	 * @param data A json string containing the data to send.
+	 * @param parentId The external stream id (from ActivityData.externalID)
+	 * @return
+	 * @throws TileUninstalledException
+	 * @throws InvalidRequestException
+	 */
+	boolean sendExternalStreamComment(@Nonnull TileInstance tileInstance, @Nonnull String data, @Nonnull String parentId)
+			throws TileUninstalledException, InvalidRequestException;
+
+	/**
+	 * Send a tile update.
+	 *
+	 * @param tileInstance  The tile instance to send data to.
+	 * @param data The tile data as an object.
+	 * @return
+	 * @throws IOException
+	 * @throws InvalidRequestException
+	 * @throws TileUninstalledException
+	 */
 	boolean sendPutTileUpdate(TileInstance tileInstance, @Nonnull TileData data) throws
 			IOException, InvalidRequestException, TileUninstalledException;
 
+	/**
+	 * Send a tile update.
+	 *
+	 * @param tileInstance The tile instance to send data to.
+	 * @param data A json string containing the data to send.
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 * @throws InvalidRequestException
+	 * @throws TileUninstalledException
+	 */
 	boolean sendPutTileUpdate(TileInstance tileInstance, @Nonnull String data) throws
 			UnsupportedEncodingException, InvalidRequestException, TileUninstalledException;
 }

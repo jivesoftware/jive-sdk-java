@@ -1,7 +1,7 @@
 package com.jivesoftware.jivesdk.server.endpoints;
 
 import com.jivesoftware.jivesdk.api.InstanceRegistrationHandler;
-import com.jivesoftware.jivesdk.impl.utils.DealRoomUtils;
+import com.jivesoftware.jivesdk.impl.utils.JiveSDKUtils;
 import com.jivesoftware.jivesdk.server.AuthenticationResponse;
 import com.jivesoftware.jivesdk.server.JiveAuthorizationValidator;
 import com.jivesoftware.jivesdk.server.JiveAuthorizationValidatorImpl;
@@ -54,7 +54,7 @@ public abstract class AbstractEndpoint {
 
     @Nonnull
     protected AuthenticationResponse authenticateV2Request(String authorization, @Nullable String jiveInstanceUrl, @Nullable String tenantId) {
-        if (DealRoomUtils.isAllExist(jiveInstanceUrl, tenantId)) {
+        if (JiveSDKUtils.isAllExist(jiveInstanceUrl, tenantId)) {
             Map<String, String> params = jiveAuthorizationValidator.getParamsFromAuthz(authorization);
             String paramJiveUrl = params.get(JiveAuthorizationValidator.PARAM_JIVE_URL);
             String paramTenantId = params.get(JiveAuthorizationValidator.PARAM_TENANT_ID);

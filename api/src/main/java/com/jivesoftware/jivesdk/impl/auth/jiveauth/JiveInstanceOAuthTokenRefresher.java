@@ -24,7 +24,7 @@ import com.jivesoftware.jivesdk.impl.http.HttpResponse;
 import com.jivesoftware.jivesdk.impl.http.RefreshTokenRequest;
 import com.jivesoftware.jivesdk.impl.http.RestRequestFactory;
 import com.jivesoftware.jivesdk.impl.http.post.RestPostRequestBuilder;
-import com.jivesoftware.jivesdk.impl.utils.DealRoomUtils;
+import com.jivesoftware.jivesdk.impl.utils.JiveSDKUtils;
 import com.jivesoftware.jivesdk.impl.utils.JsonUtils;
 import com.jivesoftware.jivesdk.server.ServerConstants;
 import org.apache.http.HttpStatus;
@@ -36,10 +36,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Zvoykish
- * Date: 24/7/13
- * Time: 5:44 PM
+ * This code will refresh an oauth token after it expires.
  */
 public class JiveInstanceOAuthTokenRefresher implements JiveTokenRefresher {
     private final static Logger log = LoggerFactory.getLogger(JiveInstanceOAuthTokenRefresher.class);
@@ -52,7 +49,7 @@ public class JiveInstanceOAuthTokenRefresher implements JiveTokenRefresher {
         try {
             RefreshTokenRequest request = new RefreshTokenRequest(item.getCredentials().getRefreshToken());
             Map<String, String> requestParams = request.getFormParams();
-            String tokenUrl = DealRoomUtils.createUrl(item.getJiveInstanceUrl(), ServerConstants.OAUTH_SUFFIX);
+            String tokenUrl = JiveSDKUtils.createUrl(item.getJiveInstanceUrl(), ServerConstants.OAUTH_SUFFIX);
             Map<String, String> params = Maps.newHashMap();
             for (Map.Entry<String, String> entry : requestParams.entrySet()) {
                 params.put(entry.getKey(), entry.getValue());

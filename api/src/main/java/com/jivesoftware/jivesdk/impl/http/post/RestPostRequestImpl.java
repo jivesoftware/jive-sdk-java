@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Lists;
 import com.google.common.net.HttpHeaders;
 import com.jivesoftware.jivesdk.impl.http.AbstractRestRequestWithEntity;
-import com.jivesoftware.jivesdk.impl.utils.DealRoomUtils;
+import com.jivesoftware.jivesdk.impl.utils.JiveSDKUtils;
 import com.jivesoftware.jivesdk.impl.utils.JsonUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -76,7 +76,7 @@ public class RestPostRequestImpl extends AbstractRestRequestWithEntity<HttpPost>
             }
 
             try {
-                method.setEntity(new UrlEncodedFormEntity(parameters, DealRoomUtils.UTF_8));
+                method.setEntity(new UrlEncodedFormEntity(parameters, JiveSDKUtils.UTF_8));
             } catch (UnsupportedEncodingException e) {
                 log.warn("Failed setting POST entity using UTF-8 encoding, trying default encoding", e);
                 try {

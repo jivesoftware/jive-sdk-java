@@ -1,7 +1,7 @@
 package com.jivesoftware.jivesdk.impl.http.get;
 
 import com.jivesoftware.jivesdk.impl.http.AbstractRestRequest;
-import com.jivesoftware.jivesdk.impl.utils.DealRoomUtils;
+import com.jivesoftware.jivesdk.impl.utils.JiveSDKUtils;
 import org.apache.http.client.methods.HttpGet;
 
 import javax.annotation.Nonnull;
@@ -73,9 +73,9 @@ public class RestGetRequestImpl extends AbstractRestRequest<HttpGet> implements 
                     paramsStr.append('?');
                 }
 
-                paramsStr.append(DealRoomUtils.encodeUrl(entry.getKey())).
+                paramsStr.append(JiveSDKUtils.encodeUrl(entry.getKey())).
                         append('=').
-                        append(DealRoomUtils.encodeUrl(entry.getValue()));
+                        append(JiveSDKUtils.encodeUrl(entry.getValue()));
             }
         }
 

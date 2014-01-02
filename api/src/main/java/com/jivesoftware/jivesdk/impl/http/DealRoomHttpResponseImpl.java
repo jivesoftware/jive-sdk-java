@@ -2,7 +2,7 @@ package com.jivesoftware.jivesdk.impl.http;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Optional;
-import com.jivesoftware.jivesdk.impl.utils.DealRoomUtils;
+import com.jivesoftware.jivesdk.impl.utils.JiveSDKUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +33,7 @@ public class DealRoomHttpResponseImpl implements HttpResponse {
     public DealRoomHttpResponseImpl(int statusCode, @Nonnull Map<String, String> responseHeaders, InputStream inputStream) {
         this(statusCode, responseHeaders, (String) null);
         this.inputStream = getInputStream(inputStream);
-        this.responseBody = Optional.of(DealRoomUtils.getStringFromStream(this.inputStream));
+        this.responseBody = Optional.of(JiveSDKUtils.getStringFromStream(this.inputStream));
     }
 
     public DealRoomHttpResponseImpl(int statusCode, @Nonnull Map<String, String> responseHeaders, String responseBody) {

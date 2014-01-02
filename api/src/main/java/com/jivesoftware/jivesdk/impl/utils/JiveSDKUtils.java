@@ -22,13 +22,12 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Zvoykish
- * Date: 31/1/13
- * Time: 11:57 AM
+ * Internal utility methods. These should not be used by client apps.
+ *
+ * There is no guarentee on backward compatiblity of these methods.
  */
-public class DealRoomUtils {
-    private static final Logger log = LoggerFactory.getLogger(DealRoomUtils.class);
+public class JiveSDKUtils {
+    private static final Logger log = LoggerFactory.getLogger(JiveSDKUtils.class);
     private static final Logger criticalLogger = LoggerFactory.getLogger("dealroomCriticalLogger");
     public static final String UTF_8 = "UTF-8";
     public static final Pattern PATTERN_NO_SUCH_COLUMN = Pattern.compile(".*No such column '(\\w*)' on entity '(\\w*)'.*");
@@ -145,7 +144,7 @@ public class DealRoomUtils {
         }
 
         String base64UserAndPass = authorization.substring(6);
-        String userAndPass = DealRoomUtils.decodeBase64(base64UserAndPass);
+        String userAndPass = JiveSDKUtils.decodeBase64(base64UserAndPass);
         int separator = userAndPass.indexOf(":");
         if (separator == -1) {
             return false;

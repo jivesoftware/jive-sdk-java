@@ -8,7 +8,7 @@ import com.jivesoftware.externalclient.JiveOAuthResponse;
 import com.jivesoftware.jivesdk.api.*;
 import com.jivesoftware.jivesdk.impl.CredentialsImpl;
 import com.jivesoftware.jivesdk.impl.http.post.RestPostRequestBuilder;
-import com.jivesoftware.jivesdk.impl.utils.DealRoomUtils;
+import com.jivesoftware.jivesdk.impl.utils.JiveSDKUtils;
 import com.jivesoftware.jivesdk.impl.utils.JsonUtils;
 import com.jivesoftware.jivesdk.server.ServerConstants;
 import org.apache.commons.lang.StringUtils;
@@ -38,7 +38,7 @@ public class JiveInstanceOAuthClient implements JiveCredentialsAcquirer, JiveOAu
         String clientId = tileRegistrationRequest.getClientId();
         String clientSecret = tileRegistrationRequest.getClientSecret();
         String code = tileRegistrationRequest.getTempToken();
-        if (!DealRoomUtils.isAllExist(jiveInstanceUrl, clientId, clientSecret, code)) {
+        if (!JiveSDKUtils.isAllExist(jiveInstanceUrl, clientId, clientSecret, code)) {
             log.error("Can't get access token due to invalid request: " + tileRegistrationRequest);
             return null;
         }
@@ -62,7 +62,7 @@ public class JiveInstanceOAuthClient implements JiveCredentialsAcquirer, JiveOAu
     public JiveOAuthResponse getAccessToken(@Nonnull JiveOAuthRequest request) {
         String jiveInstanceUrl = request.getJiveInstanceUrl();
         String msg = "Exchange access token with Jive instance: " + jiveInstanceUrl;
-        String tokenUrl = DealRoomUtils.createUrl(jiveInstanceUrl, ServerConstants.OAUTH_SUFFIX);
+        String tokenUrl = JiveSDKUtils.createUrl(jiveInstanceUrl, ServerConstants.OAUTH_SUFFIX);
 
         Map<String, String> params = Maps.newHashMap();
         Map<String, String> bodyParams = request.getBodyParams();

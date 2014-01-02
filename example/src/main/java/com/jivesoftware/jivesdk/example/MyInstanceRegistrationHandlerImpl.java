@@ -86,6 +86,5 @@ public class MyInstanceRegistrationHandlerImpl implements InstanceRegistrationHa
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 }

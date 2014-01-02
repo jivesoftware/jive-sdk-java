@@ -18,7 +18,7 @@ package com.jivesoftware.jivesdk.server.endpoints;
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.jivesoftware.jivesdk.impl.PropertyConfiguration;
-import com.jivesoftware.jivesdk.impl.utils.DealRoomUtils;
+import com.jivesoftware.jivesdk.impl.utils.JiveSDKUtils;
 import com.jivesoftware.jivesdk.server.ServerConstants;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonNode;
@@ -66,7 +66,7 @@ public class WebEndpoints {
             Map<String, String> replacements = Maps.newHashMap();
             replacements.put(HOST_SUFFIX, "");
             if (!StringUtils.isEmpty(vars)) {
-                String decodedVars = DealRoomUtils.decodeBase64(vars);
+                String decodedVars = JiveSDKUtils.decodeBase64(vars);
                 JsonNode replaceObj = new ObjectMapper().readTree(decodedVars);
                 Iterator<Map.Entry<String, JsonNode>> it = replaceObj.getFields();
                 while (it.hasNext()) {
@@ -85,11 +85,11 @@ public class WebEndpoints {
             replacements.put(TIME_TEMPLATE, String.valueOf(System.currentTimeMillis()));
 
             if (!verifyReplacementsAreValid(replacements)) {
-                String entity = DealRoomUtils.createHtmlMessage("Invalid HTML replacement-vars");
+                String entity = JiveSDKUtils.createHtmlMessage("Invalid HTML replacement-vars");
                 return Response.status(Response.Status.BAD_REQUEST).entity(entity).build();
             }
 
-            String contents = DealRoomUtils.readFile(name);
+            String contents = JiveSDKUtils.readFile(name);
             for (Map.Entry<String, String> entry : replacements.entrySet()) {
                 contents = contents.replace(entry.getKey(), entry.getValue());
             }
@@ -143,7 +143,7 @@ public class WebEndpoints {
 
     private Response getStreamResponse(@Nonnull String filename, @Nonnull String mediaType) {
         try {
-            Optional<InputStream> inputStream = DealRoomUtils.getFileInputStream(filename);
+            Optional<InputStream> inputStream = JiveSDKUtils.getFileInputStream(filename);
             if (inputStream.isPresent()) {
                 return Response.ok(inputStream.get(), mediaType).build();
             }

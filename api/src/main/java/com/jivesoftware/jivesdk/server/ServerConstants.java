@@ -2,7 +2,7 @@ package com.jivesoftware.jivesdk.server;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.jivesoftware.jivesdk.impl.utils.DealRoomUtils;
+import com.jivesoftware.jivesdk.impl.utils.JiveSDKUtils;
 import org.apache.http.HttpStatus;
 
 import java.util.List;
@@ -120,7 +120,8 @@ public class ServerConstants {
     public static final String OAUTH_SUFFIX = "/oauth2/token";
     public static final String SALESFORCE_LOGIN_BASE_URL = "https://login.salesforce.com";
     public static final String SALESFORCE_OAUTH_TOKEN_ENDPOINT = "/services" + OAUTH_SUFFIX;
-    public static final String SALESFORCE_OAUTH_TOKEN_DEFAULT_URL = DealRoomUtils.createUrl(SALESFORCE_LOGIN_BASE_URL, SALESFORCE_OAUTH_TOKEN_ENDPOINT);
+    public static final String SALESFORCE_OAUTH_TOKEN_DEFAULT_URL = JiveSDKUtils.createUrl(SALESFORCE_LOGIN_BASE_URL,
+			SALESFORCE_OAUTH_TOKEN_ENDPOINT);
 
     public static final String SALESFORCE_OAUTH_LOGIN_ENDPOINT = "/services/oauth2/authorize" +
             "?response_type=code&client_id=%s&redirect_uri=%s&display=popup&scope=api%%20id%%20refresh_token";

@@ -2,7 +2,7 @@ package com.jivesoftware.jivesdk.impl.http;
 
 import com.google.common.base.Optional;
 import com.google.common.net.HttpHeaders;
-import com.jivesoftware.jivesdk.impl.utils.DealRoomUtils;
+import com.jivesoftware.jivesdk.impl.utils.JiveSDKUtils;
 import org.apache.http.client.methods.HttpRequestBase;
 
 import javax.annotation.Nonnull;
@@ -96,7 +96,7 @@ public abstract class AbstractRestRequest<T extends HttpRequestBase> implements 
 
     private void addBasicAuthHeader(@Nonnull HttpRequestBase method) {
         String userAndPass = basicUser.get() + ':' + basicPass.get();
-        String base64UserAndPass = DealRoomUtils.encodeBase64(userAndPass);
+        String base64UserAndPass = JiveSDKUtils.encodeBase64(userAndPass);
         method.addHeader(HttpHeaders.AUTHORIZATION, AUTH_PREFIX_BASIC_AUTH + base64UserAndPass);
     }
 }

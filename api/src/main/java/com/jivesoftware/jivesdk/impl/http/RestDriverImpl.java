@@ -7,7 +7,7 @@ import com.jivesoftware.jivesdk.api.RestDriver;
 import com.jivesoftware.jivesdk.impl.http.get.RestGetRequest;
 import com.jivesoftware.jivesdk.impl.http.post.RestPostRequest;
 import com.jivesoftware.jivesdk.impl.http.put.RestPutRequest;
-import com.jivesoftware.jivesdk.impl.utils.DealRoomUtils;
+import com.jivesoftware.jivesdk.impl.utils.JiveSDKUtils;
 import com.jivesoftware.jivesdk.server.ServerConstants;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -26,10 +26,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Zvoykish
- * Date: 9/1/13
- * Time: 11:17 AM
+ * Client code to abstract communication with a Jive instance.
  */
 public class RestDriverImpl implements RestDriver {
     private static final Logger log = LoggerFactory.getLogger(RestDriverImpl.class);
@@ -193,7 +190,7 @@ public class RestDriverImpl implements RestDriver {
     }
 
     private String getEntityBody(HttpEntity entity) throws IOException {
-        return entity != null ? EntityUtils.toString(entity, DealRoomUtils.UTF_8) : "";
+        return entity != null ? EntityUtils.toString(entity, JiveSDKUtils.UTF_8) : "";
     }
 
     private long dumpRequestIfDebugging(@Nonnull RestRequest request) {
@@ -230,7 +227,7 @@ public class RestDriverImpl implements RestDriver {
                     try {
                         outputStream = new ByteArrayOutputStream();
                         entity.get().writeTo(outputStream);
-                        sb.append(new String(outputStream.toByteArray(), DealRoomUtils.UTF_8)).append(DUMP_DELIMIT);
+                        sb.append(new String(outputStream.toByteArray(), JiveSDKUtils.UTF_8)).append(DUMP_DELIMIT);
                     } catch (IOException e) {
                         log.error("Failed dumping request body", e);
                     } finally {

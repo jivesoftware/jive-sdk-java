@@ -7,7 +7,7 @@ import com.jivesoftware.jivesdk.api.tiles.ActivityData;
 import com.jivesoftware.jivesdk.api.tiles.TileData;
 import com.jivesoftware.jivesdk.impl.http.post.RestPostRequestBuilder;
 import com.jivesoftware.jivesdk.impl.http.put.RestPutRequestBuilder;
-import com.jivesoftware.jivesdk.impl.utils.DealRoomUtils;
+import com.jivesoftware.jivesdk.impl.utils.JiveSDKUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.entity.ContentType;
@@ -27,20 +27,15 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Zvoykish
- * Date: 27/1/13
- * Time: 7:01 PM
+ * Implementation of a client to jive.
  */
 public class JiveClientImpl implements JiveClient {
     public static final String PATH_ACTIVITIES = "/activities";
     public static final String TEMPLATE_PATH_EXT_COMMENTS = "/extactivities/%s/comments";
-    public static final String LOG_CHATTER_SENDING_MESSAGE = "Sent Chatter data to gateway, received status code: %d";
-    public static final String LOG_DATA_SENDING_MESSAGE = "Sent data to gateway, received status code: %d";
-    public static final String LOG_STATUS_UPDATE_SENDING_MESSAGE = "Sent status update to gateway, received status code: %d";
+    public static final String LOG_ACTIVITY_SENDING_MESSAGE = "Sent activity data to gateway, received status code: %d";
+    public static final String LOG_DATA_SENDING_MESSAGE = "Sent tile data to gateway, received status code: %d";
     public static final Set<Integer> EXPECTED_RESPONSES_ACTIVITY = Sets.newHashSet(HttpStatus.SC_CREATED, HttpStatus.SC_CONFLICT);
     public static final Set<Integer> EXPECTED_RESPONSES_TILE_UPDATE = Sets.newHashSet(HttpStatus.SC_NO_CONTENT);
-    public static final Set<Integer> EXPECTED_RESPONSES_STATUS_UPDATE = Sets.newHashSet(HttpStatus.SC_NO_CONTENT);
 	protected Logger log = LoggerFactory.getLogger(getClass());
 	protected ObjectMapper objectMapper = new ObjectMapper();
 
@@ -52,46 +47,46 @@ public class JiveClientImpl implements JiveClient {
 	}
 
 	@Override
-	public boolean sendExternalStreamComment(@Nonnull TileInstance item, @Nonnull ActivityData data,
+	public boolean sendExternalStreamComment(@Nonnull TileInstance tileInstance, @Nonnull ActivityData data,
 											 @Nonnull String parentId) throws TileUninstalledException,
 			InvalidRequestException, IOException {
 		String json = objectMapper.writeValueAsString(data);
 
-		return sendExternalStreamComment(item, json, parentId);
+		return sendExternalStreamComment(tileInstance, json, parentId);
 	}
 
 	@Override
-	public boolean sendExternalStreamActivity(@Nonnull TileInstance item, @Nonnull ActivityData data) throws
+	public boolean sendExternalStreamActivity(@Nonnull TileInstance tileInstance, @Nonnull ActivityData data) throws
 			TileUninstalledException, InvalidRequestException, IOException {
 		Map<String, ActivityData> map = new HashMap<String, ActivityData>();
 		map.put("activity", data);
 		String json = objectMapper.writeValueAsString(map);
 
-		return sendExternalStreamActivity(item, json);
+		return sendExternalStreamActivity(tileInstance, json);
 	}
 
 	@Override
-	public boolean sendExternalStreamComment(@Nonnull TileInstance item, @Nonnull String data,
+	public boolean sendExternalStreamComment(@Nonnull TileInstance tileInstance, @Nonnull String data,
 											 @Nonnull String parentId) throws TileUninstalledException,
 			InvalidRequestException {
-		return sendExternalStreamComment(item, new StringEntity(data, ContentType.APPLICATION_JSON), parentId);
+		return sendExternalStreamComment(tileInstance, new StringEntity(data, ContentType.APPLICATION_JSON), parentId);
 	}
 
 	@Override
-	public boolean sendExternalStreamActivity(@Nonnull TileInstance item, @Nonnull String data) throws
+	public boolean sendExternalStreamActivity(@Nonnull TileInstance tileInstance, @Nonnull String data) throws
 			TileUninstalledException, InvalidRequestException {
-		return sendExternalStreamActivity(item, new StringEntity(data, ContentType.APPLICATION_JSON));
+		return sendExternalStreamActivity(tileInstance, new StringEntity(data, ContentType.APPLICATION_JSON));
 	}
 
 	protected boolean sendExternalStreamActivity(@Nonnull TileInstance item, @Nonnull HttpEntity data)
 			throws InvalidRequestException, TileUninstalledException {
 		String itemUrl = item.getJivePushUrl();
-        String url = DealRoomUtils.createUrl(itemUrl, PATH_ACTIVITIES);
+        String url = JiveSDKUtils.createUrl(itemUrl, PATH_ACTIVITIES);
         RestPostRequestBuilder request = RestRequestFactory.createPostRequestBuilder(url)
                 .withEntity(data)
                 .withOAuth(item.getCredentials().getAuthToken());
 
-        HttpResponse response = sendItemToJive(request, item, LOG_CHATTER_SENDING_MESSAGE, EXPECTED_RESPONSES_ACTIVITY);
+        HttpResponse response = sendItemToJive(request, item, LOG_ACTIVITY_SENDING_MESSAGE, EXPECTED_RESPONSES_ACTIVITY);
         if (response != null) {
             int statusCode = response.getStatusCode();
             if (statusCode == HttpStatus.SC_CONFLICT) {
@@ -109,12 +104,12 @@ public class JiveClientImpl implements JiveClient {
 			throws InvalidRequestException, TileUninstalledException {
         String path = String.format(TEMPLATE_PATH_EXT_COMMENTS, parentId);
 		String itemUrl = item.getJivePushUrl();
-        String url = DealRoomUtils.createUrl(itemUrl, path);
+        String url = JiveSDKUtils.createUrl(itemUrl, path);
         RestPostRequestBuilder request = RestRequestFactory.createPostRequestBuilder(url)
                 .withEntity(data)
                 .withOAuth(item.getCredentials().getAuthToken());
 
-        HttpResponse response = sendItemToJive(request, item, LOG_CHATTER_SENDING_MESSAGE, EXPECTED_RESPONSES_ACTIVITY);
+        HttpResponse response = sendItemToJive(request, item, LOG_ACTIVITY_SENDING_MESSAGE, EXPECTED_RESPONSES_ACTIVITY);
         if (response != null) {
             int statusCode = response.getStatusCode();
             if (statusCode == HttpStatus.SC_CONFLICT) {
@@ -179,7 +174,7 @@ public class JiveClientImpl implements JiveClient {
                     throw new TileUninstalledException();
                 }
                 case HttpStatus.SC_FORBIDDEN: {
-                    throw new AuthTokenException(request.getUrl(), DealRoomUtils.readStringFromResponse(response));
+                    throw new AuthTokenException(request.getUrl(), JiveSDKUtils.readStringFromResponse(response));
                 }
                 case HttpStatus.SC_NOT_FOUND: {
                     handleNotFound(item, response);
@@ -190,7 +185,7 @@ public class JiveClientImpl implements JiveClient {
             }
 
             if (!expectedResponses.contains(statusCode)) {
-                String responseStr = DealRoomUtils.readStringFromResponse(response);
+                String responseStr = JiveSDKUtils.readStringFromResponse(response);
                 String token = item.getCredentials().getAuthToken();
                 log.error(String.format("Failed sending item to jive. Received response [%d]: %s. Token [%s], item: %s", statusCode, responseStr, token, item.toString()));
             }

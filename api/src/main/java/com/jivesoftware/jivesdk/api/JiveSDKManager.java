@@ -8,6 +8,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
+ * This is the main entry point to the jive sdk.  All object instances are created from this class
+ * and can be retrieved from the appopriate methods.
+ *
  */
 @Singleton
 public class JiveSDKManager {

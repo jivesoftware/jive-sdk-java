@@ -5,7 +5,7 @@ import com.jivesoftware.jivesdk.api.InstanceRegistrationRequest;
 import com.jivesoftware.jivesdk.api.JiveSignatureValidator;
 import com.jivesoftware.jivesdk.api.RegisteredInstance;
 import com.jivesoftware.jivesdk.impl.auth.jiveauth.JiveSignatureValidatorImpl;
-import com.jivesoftware.jivesdk.impl.utils.DealRoomUtils;
+import com.jivesoftware.jivesdk.impl.utils.JiveSDKUtils;
 import com.jivesoftware.jivesdk.server.ServerConstants;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
@@ -67,7 +67,7 @@ public class InstancesEndpoints extends AbstractEndpoint {
 
             String signature = request.getJiveSignature();
             String signatureURL = request.getJiveSignatureURL();
-            if (!DealRoomUtils.isAllExist(signature, signatureURL)) {
+            if (!JiveSDKUtils.isAllExist(signature, signatureURL)) {
                 String msg = String.format("Invalid signature [%s] / signature URL [%s]", signature, signatureURL);
                 log.error(msg);
                 return unAuthorized();

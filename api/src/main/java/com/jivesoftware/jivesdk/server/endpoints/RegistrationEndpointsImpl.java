@@ -4,7 +4,7 @@ import com.jivesoftware.jivesdk.api.InstanceRegistrationHandler;
 import com.jivesoftware.jivesdk.api.JiveSDKManager;
 import com.jivesoftware.jivesdk.api.TileRegistrationRequest;
 import com.jivesoftware.jivesdk.impl.PropertyConfiguration;
-import com.jivesoftware.jivesdk.impl.utils.DealRoomUtils;
+import com.jivesoftware.jivesdk.impl.utils.JiveSDKUtils;
 import com.jivesoftware.jivesdk.server.AuthenticationResponse;
 import com.jivesoftware.jivesdk.server.ServerConstants;
 import org.apache.commons.lang.StringUtils;
@@ -58,7 +58,7 @@ public class RegistrationEndpointsImpl extends AbstractEndpoint  {
 
             String jiveInstanceUrl = tileRegistrationRequest.getJiveInstanceUrl();
             String tenantId = tileRegistrationRequest.getTenantId();
-            if (!DealRoomUtils.isAllExist(jiveInstanceUrl, tenantId)) {
+            if (!JiveSDKUtils.isAllExist(jiveInstanceUrl, tenantId)) {
                 String msg = String.format("Jive instance URL [%s] / Tenant ID [%s] are missing from V2 registration request", jiveInstanceUrl, tenantId);
                 log.warn(msg);
             }
@@ -81,7 +81,8 @@ public class RegistrationEndpointsImpl extends AbstractEndpoint  {
 
     public Response doRegister(TileRegistrationRequest tileRegistrationRequest) {
         try {
-            if (!DealRoomUtils.isAllExist(tileRegistrationRequest.getTempToken(), tileRegistrationRequest.getGuid(), tileRegistrationRequest.getJivePushUrl(), tileRegistrationRequest.getTileDefName())) {
+            if (!JiveSDKUtils.isAllExist(tileRegistrationRequest.getTempToken(), tileRegistrationRequest.getGuid(),
+					tileRegistrationRequest.getJivePushUrl(), tileRegistrationRequest.getTileDefName())) {
                 ObjectNode errorObj = logErrorAndCreateErrorResponse("Failed registering due to bad registration request: " + tileRegistrationRequest);
                 return Response.status(HttpStatus.SC_BAD_REQUEST).entity(errorObj).build();
             }
