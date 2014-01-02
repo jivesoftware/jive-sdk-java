@@ -11,5 +11,9 @@ jive-sdk-java
 
  To get started look in the example directory.
 
- You need your own servlet or http server,  injection framework, and persistence framework.  The example uses jersey/glassfish/hk2 and
+ You need your own servlet or http server  and persistence framework.  The example uses jersey/glassfish and
  persists to a single file.
+
+To use the SDK you must implement `com.jivesoftware.jivesdk.api.InstanceRegistrationHandler` and attach your instance to
+JiveSDKManager by using the following code:
+	`JiveSDKManager.getInstance().setInstanceRegistrationHandler(instanceRegistrationHandler);`

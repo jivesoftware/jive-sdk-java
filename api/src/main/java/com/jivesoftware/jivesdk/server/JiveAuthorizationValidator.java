@@ -1,7 +1,5 @@
 package com.jivesoftware.jivesdk.server;
 
-import com.jivesoftware.jivesdk.api.InstanceRegistrationHandler;
-
 import javax.annotation.Nonnull;
 import java.util.Map;
 
@@ -25,5 +23,5 @@ public interface JiveAuthorizationValidator {
     @Nonnull
     Map<String, String> getParamsFromAuthz(@Nonnull String authz);
 
-    AuthenticationResponse authenticate(@Nonnull String authz, InstanceRegistrationHandler jiveInstanceHandler);
+    AuthenticationResponse authenticate(@Nonnull String authz);
 }

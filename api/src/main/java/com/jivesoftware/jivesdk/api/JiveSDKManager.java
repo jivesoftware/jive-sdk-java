@@ -14,14 +14,13 @@ import javax.inject.Singleton;
  */
 @Singleton
 public class JiveSDKManager {
-	public static JiveSDKManager instance;
+	public static JiveSDKManager instance = new JiveSDKManager();
 	private final RestDriverImpl restDriver;
 	private final HttpClientFactoryImpl httpClientFactory;
 	private final JiveInstanceOAuthClient jiveInstanceOAuthClient;
 	private JiveClientImpl jiveClient;
 	private JiveInstanceOAuthTokenRefresher jiveTokenRefresher;
 
-	@Inject
 	private InstanceRegistrationHandler instanceRegistrationHandler;
 
 	public JiveSDKManager() {
@@ -51,6 +50,11 @@ public class JiveSDKManager {
 		return instanceRegistrationHandler;
 	}
 
+	/**
+	 * Register the instanceRegistrationHandler with the SDK.  This can be used if there wasn't an injection framework used to create
+	 * this class.
+	 * @param instanceRegistrationHandler
+	 */
 	public void setInstanceRegistrationHandler(InstanceRegistrationHandler instanceRegistrationHandler) {
 		this.instanceRegistrationHandler = instanceRegistrationHandler;
 	}

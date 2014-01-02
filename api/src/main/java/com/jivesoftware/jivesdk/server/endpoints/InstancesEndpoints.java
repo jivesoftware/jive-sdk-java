@@ -1,9 +1,6 @@
 package com.jivesoftware.jivesdk.server.endpoints;
 
-import com.jivesoftware.jivesdk.api.InstanceRegistrationHandler;
-import com.jivesoftware.jivesdk.api.InstanceRegistrationRequest;
-import com.jivesoftware.jivesdk.api.JiveSignatureValidator;
-import com.jivesoftware.jivesdk.api.RegisteredInstance;
+import com.jivesoftware.jivesdk.api.*;
 import com.jivesoftware.jivesdk.impl.auth.jiveauth.JiveSignatureValidatorImpl;
 import com.jivesoftware.jivesdk.impl.utils.JiveSDKUtils;
 import com.jivesoftware.jivesdk.server.ServerConstants;
@@ -14,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -32,9 +28,6 @@ import javax.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 public class InstancesEndpoints extends AbstractEndpoint {
     private final static Logger log = LoggerFactory.getLogger(InstancesEndpoints.class);
-
-    @Inject
-    private InstanceRegistrationHandler instanceRegistrationHandler;
 
     private JiveSignatureValidator jiveSignatureValidator = new JiveSignatureValidatorImpl();
 
@@ -78,7 +71,7 @@ public class InstancesEndpoints extends AbstractEndpoint {
                 return unAuthorized();
             }
 
-            RegisteredInstance registeredInstance = instanceRegistrationHandler.register(request);
+            RegisteredInstance registeredInstance = JiveSDKManager.getInstance().getInstanceRegistrationHandler().register(request);
             if (registeredInstance == null) {
                 log.error("Failed registering instance");
                 return serverError();
@@ -103,13 +96,5 @@ public class InstancesEndpoints extends AbstractEndpoint {
     @Nonnull
     private Response serverError() {
         return Response.serverError().build();
-    }
-
-    public void setInstanceRegistrationHandler(InstanceRegistrationHandler instanceRegistrationHandler) {
-        this.instanceRegistrationHandler = instanceRegistrationHandler;
-    }
-
-    public void setJiveSignatureValidator(JiveSignatureValidator jiveSignatureValidator) {
-        this.jiveSignatureValidator = jiveSignatureValidator;
     }
 }

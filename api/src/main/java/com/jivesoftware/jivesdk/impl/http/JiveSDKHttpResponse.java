@@ -19,8 +19,8 @@ import java.util.zip.GZIPInputStream;
  * Date: 9/1/13
  * Time: 4:00 PM
  */
-public class DealRoomHttpResponseImpl implements HttpResponse {
-    private static final Logger log = LoggerFactory.getLogger(DealRoomHttpResponseImpl.class);
+public class JiveSDKHttpResponse implements HttpResponse {
+    private static final Logger log = LoggerFactory.getLogger(JiveSDKHttpResponse.class);
 
     public static final String ENCODING_GZIP = "gzip";
     public static final String HEADER_CONTENT_ENCODING = "Content-Encoding";
@@ -30,13 +30,13 @@ public class DealRoomHttpResponseImpl implements HttpResponse {
     private InputStream inputStream;
     private Optional<String> responseBody;
 
-    public DealRoomHttpResponseImpl(int statusCode, @Nonnull Map<String, String> responseHeaders, InputStream inputStream) {
+    public JiveSDKHttpResponse(int statusCode, @Nonnull Map<String, String> responseHeaders, InputStream inputStream) {
         this(statusCode, responseHeaders, (String) null);
         this.inputStream = getInputStream(inputStream);
         this.responseBody = Optional.of(JiveSDKUtils.getStringFromStream(this.inputStream));
     }
 
-    public DealRoomHttpResponseImpl(int statusCode, @Nonnull Map<String, String> responseHeaders, String responseBody) {
+    public JiveSDKHttpResponse(int statusCode, @Nonnull Map<String, String> responseHeaders, String responseBody) {
         this.statusCode = statusCode;
         this.responseHeaders = responseHeaders;
         this.responseBody = Optional.fromNullable(responseBody);

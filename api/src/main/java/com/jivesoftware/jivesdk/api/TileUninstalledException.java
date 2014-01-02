@@ -7,4 +7,10 @@ package com.jivesoftware.jivesdk.api;
  * Time: 11:46 PM
  */
 public class TileUninstalledException extends Exception {
+	private TileInstance item;
+
+	public TileUninstalledException(TileInstance item) {
+
+		this.item = item;
+	}
 }

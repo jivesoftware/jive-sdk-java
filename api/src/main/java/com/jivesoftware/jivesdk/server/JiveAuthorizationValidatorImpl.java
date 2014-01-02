@@ -2,6 +2,7 @@ package com.jivesoftware.jivesdk.server;
 
 import com.google.common.collect.Maps;
 import com.jivesoftware.jivesdk.api.InstanceRegistrationHandler;
+import com.jivesoftware.jivesdk.api.JiveSDKManager;
 import com.jivesoftware.jivesdk.api.RegisteredInstance;
 import com.jivesoftware.jivesdk.impl.utils.JiveSDKUtils;
 import org.apache.commons.codec.binary.Base64;
@@ -52,7 +53,9 @@ public class JiveAuthorizationValidatorImpl implements JiveAuthorizationValidato
     }
 
     @Override
-    public AuthenticationResponse authenticate(@Nonnull String authz, InstanceRegistrationHandler jiveInstanceHandler) {
+    public AuthenticationResponse authenticate(@Nonnull String authz ) {
+		InstanceRegistrationHandler jiveInstanceHandler = JiveSDKManager.getInstance().getInstanceRegistrationHandler();
+
         try {
             if (!authz.startsWith(JIVE_EXTN) || !authz.contains(QUERY_PARAM_SIGNATURE)) {
                 log.error("Jive authorization isn't properly formatted: " + authz);

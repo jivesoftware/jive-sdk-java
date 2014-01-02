@@ -118,13 +118,6 @@ public class ServerConstants {
     };
 
     public static final String OAUTH_SUFFIX = "/oauth2/token";
-    public static final String SALESFORCE_LOGIN_BASE_URL = "https://login.salesforce.com";
-    public static final String SALESFORCE_OAUTH_TOKEN_ENDPOINT = "/services" + OAUTH_SUFFIX;
-    public static final String SALESFORCE_OAUTH_TOKEN_DEFAULT_URL = JiveSDKUtils.createUrl(SALESFORCE_LOGIN_BASE_URL,
-			SALESFORCE_OAUTH_TOKEN_ENDPOINT);
-
-    public static final String SALESFORCE_OAUTH_LOGIN_ENDPOINT = "/services/oauth2/authorize" +
-            "?response_type=code&client_id=%s&redirect_uri=%s&display=popup&scope=api%%20id%%20refresh_token";
 
     public static final String JIVE_TILES_MIGRATION_ENDPOINT = "/integration/tiles/migration";
 
@@ -133,14 +126,13 @@ public class ServerConstants {
         public static final String TICKET = "/ticket";
         public static final String QUERY = "/query";
 
-        public static final String V2_PREFIX = "/v2";
         public static final String INSTANCE = "/instance";
         public static final String REGISTER = "/register";
+        public static final String UNREGISTER = "/unregister";
         public static final String CONFIGURE = "/configure";
         public static final String INSTANCES = INSTANCE + "s";
 
 
-        public static final String V2_CONFIGURE = V2_PREFIX + CONFIGURE;
         public static final String TILE = "/tile";
         public static final String OAUTH_CALLBACK = "/_callback";
 

@@ -20,64 +20,60 @@ public class TileRegistrationRequest {
     public static final String PROPERTY_NAME_TENANT_ID = "tenantID";
     public static final String PROPERTY_NAME_JIVE_INSTANCE_URL = "jiveUrl";
     public static final String PROPERTY_NAME_ITEM_TYPE = "name";
-    public static final String PROPERTY_NAME_GUID = "guid";
+    public static final String PROPERTY_NAME_TILE_INSTANCE_ID = "id";
 
-    private String tempToken;
+    private String code;
     private Map<String, String> config = new HashMap<String, String>();
     private String jivePushUrl;
-    private String jiveInstanceUrl;
-    private String tenantId;
+    private String jiveUrl;
+    private String tenantID;
     private String itemType;
     private String tileDefName;
-    private String guid;
+    private String tileInstanceID;
 
     private String clientId;
     private String clientSecret;
     private RegisteredInstance instance;
 
     @JsonCreator
-    public TileRegistrationRequest(@JsonProperty(PROPERTY_NAME_TEMP_TOKEN) String tempToken,
+    public TileRegistrationRequest(@JsonProperty(PROPERTY_NAME_TEMP_TOKEN) String code,
 								   @JsonProperty(PROPERTY_NAME_CONFIG_JSON) Map<String, String> config,
 								   @JsonProperty(PROPERTY_NAME_JIVE_PUSH_URL) String jivePushUrl,
 								   @JsonProperty(PROPERTY_NAME_JIVE_INSTANCE_URL) String jiveInstanceUrl,
-								   @JsonProperty(PROPERTY_NAME_TENANT_ID) String tenantId,
-								   @JsonProperty(PROPERTY_NAME_GUID) String guid,
+								   @JsonProperty(PROPERTY_NAME_TENANT_ID) String tenantID,
+								   @JsonProperty(PROPERTY_NAME_TILE_INSTANCE_ID) String tileInstanceID,
 								   @JsonProperty(PROPERTY_NAME_ITEM_TYPE) String itemType) {
-        this.tempToken = tempToken;
+        this.code = code;
         this.config = config;
-        this.guid = guid;
+        this.tileInstanceID = tileInstanceID;
 
         // Workaround to external stream url
         this.jivePushUrl = JiveSDKUtils.normalizeItemUrl(jivePushUrl);
-        this.jiveInstanceUrl = jiveInstanceUrl;
-        this.tenantId = tenantId;
+        this.jiveUrl = jiveInstanceUrl;
+        this.tenantID = tenantID;
 
         this.tileDefName = itemType;
         this.itemType = itemType;
     }
 
-    public String getTempToken() {
-        return tempToken;
+    public String getCode() {
+        return code;
     }
 
     public Map<String, String>  getConfig() {
         return config;
     }
 
-    public String getGuid() {
-        return guid;
-    }
-
     public String getJivePushUrl() {
         return jivePushUrl != null ? jivePushUrl.trim().toLowerCase() : null;
     }
 
-    public String getJiveInstanceUrl() {
-        return jiveInstanceUrl != null ? jiveInstanceUrl.trim().toLowerCase() : null;
+    public String getJiveUrl() {
+        return jiveUrl != null ? jiveUrl.trim().toLowerCase() : null;
     }
 
-    public String getTenantId() {
-        return tenantId;
+    public String getTenantID() {
+        return tenantID;
     }
 
     public String getItemType() {
@@ -112,42 +108,90 @@ public class TileRegistrationRequest {
         this.instance = instance;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
 
-        TileRegistrationRequest that = (TileRegistrationRequest) o;
+	/**
+	 * Get a globally unique tile instance id.  This combines the tile id and tenant id.
+	 * @return
+	 */
+	public String getGlobalTileInstanceID() {
+		return tenantID + "_" + this.tileInstanceID;
+	}
 
-        return !(clientId != null ? !clientId.equals(that.clientId) : that.clientId != null) && !(clientSecret != null ? !clientSecret.equals(that.clientSecret) : that.clientSecret != null) && !(config != null ? !config.equals(that.config) : that.config != null) && !(guid != null ? !guid.equals(that.guid) : that.guid != null) && !(itemType != null ? !itemType.equals(that.itemType) : that.itemType != null) && !(jiveInstanceUrl != null ? !jiveInstanceUrl.equals(that.jiveInstanceUrl) : that.jiveInstanceUrl != null) && !(jivePushUrl != null ? !jivePushUrl.equals(that.jivePushUrl) : that.jivePushUrl != null) && !(tempToken != null ? !tempToken.equals(that.tempToken) : that.tempToken != null) && !(tenantId != null ? !tenantId.equals(that.tenantId) : that.tenantId != null) && !(tileDefName != null ? !tileDefName.equals(that.tileDefName) : that.tileDefName != null);
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-    @Override
-    public int hashCode() {
-        int result = tempToken != null ? tempToken.hashCode() : 0;
-        result = 31 * result + (config != null ? config.hashCode() : 0);
-        result = 31 * result + (jivePushUrl != null ? jivePushUrl.hashCode() : 0);
-        result = 31 * result + (jiveInstanceUrl != null ? jiveInstanceUrl.hashCode() : 0);
-        result = 31 * result + (tenantId != null ? tenantId.hashCode() : 0);
-        result = 31 * result + (itemType != null ? itemType.hashCode() : 0);
-        result = 31 * result + (tileDefName != null ? tileDefName.hashCode() : 0);
-        result = 31 * result + (guid != null ? guid.hashCode() : 0);
-        result = 31 * result + (clientId != null ? clientId.hashCode() : 0);
-        result = 31 * result + (clientSecret != null ? clientSecret.hashCode() : 0);
-        return result;
-    }
+		TileRegistrationRequest that = (TileRegistrationRequest) o;
 
-    @Override
+		if (clientId != null ? !clientId.equals(that.clientId) : that.clientId != null) {
+			return false;
+		}
+		if (clientSecret != null ? !clientSecret.equals(that.clientSecret) : that.clientSecret != null) {
+			return false;
+		}
+		if (code != null ? !code.equals(that.code) : that.code != null) {
+			return false;
+		}
+		if (config != null ? !config.equals(that.config) : that.config != null) {
+			return false;
+		}
+		if (instance != null ? !instance.equals(that.instance) : that.instance != null) {
+			return false;
+		}
+		if (itemType != null ? !itemType.equals(that.itemType) : that.itemType != null) {
+			return false;
+		}
+		if (jivePushUrl != null ? !jivePushUrl.equals(that.jivePushUrl) : that.jivePushUrl != null) {
+			return false;
+		}
+		if (jiveUrl != null ? !jiveUrl.equals(that.jiveUrl) : that.jiveUrl != null) {
+			return false;
+		}
+		if (tenantID != null ? !tenantID.equals(that.tenantID) : that.tenantID != null) {
+			return false;
+		}
+		if (tileDefName != null ? !tileDefName.equals(that.tileDefName) : that.tileDefName != null) {
+			return false;
+		}
+		if (tileInstanceID != null ? !tileInstanceID.equals(that.tileInstanceID) : that.tileInstanceID != null) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		int result = code != null ? code.hashCode() : 0;
+		result = 31 * result + (config != null ? config.hashCode() : 0);
+		result = 31 * result + (jivePushUrl != null ? jivePushUrl.hashCode() : 0);
+		result = 31 * result + (jiveUrl != null ? jiveUrl.hashCode() : 0);
+		result = 31 * result + (tenantID != null ? tenantID.hashCode() : 0);
+		result = 31 * result + (itemType != null ? itemType.hashCode() : 0);
+		result = 31 * result + (tileDefName != null ? tileDefName.hashCode() : 0);
+		result = 31 * result + (tileInstanceID != null ? tileInstanceID.hashCode() : 0);
+		result = 31 * result + (clientId != null ? clientId.hashCode() : 0);
+		result = 31 * result + (clientSecret != null ? clientSecret.hashCode() : 0);
+		result = 31 * result + (instance != null ? instance.hashCode() : 0);
+		return result;
+	}
+
+	@Override
     public String toString() {
         return Objects.toStringHelper(this)
-                .add("tempToken", tempToken)
+                .add("code", code)
                 .add("config", config)
                 .add("jivePushUrl", jivePushUrl)
-                .add("jiveInstanceUrl", jiveInstanceUrl)
-                .add("tenantId", tenantId)
+                .add("jiveUrl", jiveUrl)
+                .add("tenantID", tenantID)
                 .add("itemType", itemType)
                 .add("tileDefName", tileDefName)
-                .add("guid", guid)
+                .add("tileInstanceID", tileInstanceID)
                 .add("clientId", clientId)
                 .toString();
     }

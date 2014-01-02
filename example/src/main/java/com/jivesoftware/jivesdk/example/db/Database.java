@@ -164,22 +164,4 @@ public class Database implements Serializable {
 		}
 		return instance;
 	}
-
-	public static DatabaseFactory getDatabaseFactory() {
-		return new DatabaseFactory();
-	}
-	private static class DatabaseFactory implements org.glassfish.hk2.api.Factory<Database> {
-
-		@Override
-		public Database provide() {
-			return getInstance();
-		}
-
-		@Override
-		public void dispose(Database instance) {
-
-		}
-	}
-
-
 }

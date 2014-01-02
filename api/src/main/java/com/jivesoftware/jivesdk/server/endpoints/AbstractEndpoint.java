@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.inject.Inject;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.CacheControl;
@@ -40,9 +39,6 @@ public abstract class AbstractEndpoint {
 
     private JiveAuthorizationValidator jiveAuthorizationValidator = new JiveAuthorizationValidatorImpl();
 
-    @Inject
-    protected InstanceRegistrationHandler jiveInstanceHandler;
-
 
     @Nonnull
     public static CacheControl createNoCache() {
@@ -54,6 +50,10 @@ public abstract class AbstractEndpoint {
 
     @Nonnull
     protected AuthenticationResponse authenticateV2Request(String authorization, @Nullable String jiveInstanceUrl, @Nullable String tenantId) {
+		if(authorization == null) {
+			return new AuthenticationResponse(HttpStatus.SC_UNAUTHORIZED);
+		}
+
         if (JiveSDKUtils.isAllExist(jiveInstanceUrl, tenantId)) {
             Map<String, String> params = jiveAuthorizationValidator.getParamsFromAuthz(authorization);
             String paramJiveUrl = params.get(JiveAuthorizationValidator.PARAM_JIVE_URL);
@@ -67,7 +67,7 @@ public abstract class AbstractEndpoint {
             }
         }
 
-        return jiveAuthorizationValidator.authenticate(authorization, jiveInstanceHandler);
+        return jiveAuthorizationValidator.authenticate(authorization);
     }
 
     @Nonnull

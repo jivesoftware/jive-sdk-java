@@ -1,6 +1,9 @@
 package com.jivesoftware.jivesdk.api;
 
+import com.jivesoftware.jivesdk.api.TileUnregisterRequest;
+
 import javax.annotation.Nonnull;
+import javax.ws.rs.core.Response;
 
 /**
  * Created with IntelliJ IDEA.
@@ -12,7 +15,7 @@ public interface InstanceRegistrationHandler {
     RegisteredInstance register(@Nonnull InstanceRegistrationRequest request);
     RegisteredInstance getByTenantId(String tenantId);
     void register(@Nonnull TileRegistrationRequest request);
-
+	void unregister(TileUnregisterRequest unRegistrationRequest);
 	/**
 	 * The object was updated and should be re-persisted.
 	 *
@@ -20,4 +23,6 @@ public interface InstanceRegistrationHandler {
 	 * @param object
 	 */
 	void update(Object object);
+
+
 }

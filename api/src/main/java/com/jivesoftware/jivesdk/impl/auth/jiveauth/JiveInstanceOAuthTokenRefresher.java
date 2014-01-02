@@ -49,13 +49,13 @@ public class JiveInstanceOAuthTokenRefresher implements JiveTokenRefresher {
         try {
             RefreshTokenRequest request = new RefreshTokenRequest(item.getCredentials().getRefreshToken());
             Map<String, String> requestParams = request.getFormParams();
-            String tokenUrl = JiveSDKUtils.createUrl(item.getJiveInstanceUrl(), ServerConstants.OAUTH_SUFFIX);
+            String tokenUrl = JiveSDKUtils.createUrl(item.getJiveUrl(), ServerConstants.OAUTH_SUFFIX);
             Map<String, String> params = Maps.newHashMap();
             for (Map.Entry<String, String> entry : requestParams.entrySet()) {
                 params.put(entry.getKey(), entry.getValue());
             }
 			RegisteredInstance registeredInstance = JiveSDKManager.getInstance().getInstanceRegistrationHandler().getByTenantId(
-					item.getTenantId());
+					item.getTenantID());
 			RestPostRequestBuilder postRequestBuilder = RestRequestFactory.createPostRequestBuilder(tokenUrl).
                     withBodyParams(params).
                     withBasicAuth(registeredInstance.getClientId(), registeredInstance.getClientSecret());

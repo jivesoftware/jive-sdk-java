@@ -24,20 +24,16 @@ import com.jivesoftware.jivesdk.api.tiles.TileAction;
 import com.jivesoftware.jivesdk.api.tiles.TileData;
 import com.jivesoftware.jivesdk.api.tiles.TileStyle;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 /**
  */
-public class SampleListTile implements Runnable {
+public class SampleListTile extends SampleTileRunner {
 	private TileInstance tileInstance;
 
-	@Inject
-	private JiveSDKManager jiveSDKManager;
-
-	public void postUpdate() {
+	public void run() {
 		try {
 			TileData<ListItem> data = new TileData<ListItem>(TileStyle.LIST);
 			data.setTitle("New Title");
@@ -56,28 +52,15 @@ public class SampleListTile implements Runnable {
 			action.setUrl("http://lmgtfy.com/");
 			action.setText("action");
 			data.setAction(action);
-			jiveSDKManager.getJiveClient().sendPutTileUpdate(tileInstance, data);
+			JiveSDKManager.getInstance().getJiveClient().sendPutTileUpdate(tileInstance, data);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (InvalidRequestException e) {
 			e.printStackTrace();
 		} catch (TileUninstalledException e) {
-			e.printStackTrace();
+			unregister();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public void run() {
-		postUpdate();
-	}
-
-	public void setTileInstance(TileInstance tileInstance) {
-		this.tileInstance = tileInstance;
-	}
-
-	public TileInstance getTileInstance() {
-		return tileInstance;
 	}
 }

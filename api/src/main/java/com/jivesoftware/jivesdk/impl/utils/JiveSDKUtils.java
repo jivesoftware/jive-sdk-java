@@ -49,7 +49,8 @@ public class JiveSDKUtils {
             return URLEncoder.encode(url, UTF_8);
         } catch (UnsupportedEncodingException e) {
             log.warn("Failed encoding URL using UTF-8 charset", e);
-            return URLEncoder.encode(url);
+			//noinspection deprecation
+			return URLEncoder.encode(url);
         }
     }
 
@@ -58,7 +59,8 @@ public class JiveSDKUtils {
             return URLDecoder.decode(url, UTF_8);
         } catch (UnsupportedEncodingException e) {
             log.warn("Failed decoding URL using UTF-8 charset", e);
-            return URLDecoder.decode(url);
+			//noinspection deprecation
+			return URLDecoder.decode(url);
         }
     }
 

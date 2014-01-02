@@ -22,23 +22,16 @@ import com.jivesoftware.jivesdk.api.TileUninstalledException;
 import com.jivesoftware.jivesdk.api.tiles.*;
 import com.jivesoftware.jivesdk.example.db.Database;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 /**
  */
-public class SampleActivity implements Runnable {
-	private TileInstance tileInstance;
+public class SampleActivity extends SampleTileRunner {
 
-	@Inject
-	private JiveSDKManager jiveSDKManager;
-
-	@Inject
-	private Database database;
-
-	public void postUpdate() {
+	@Override
+	public void run() {
 		try {
 			ActivityData data = new ActivityData(String.valueOf(System.currentTimeMillis()));
 			String countString = tileInstance.getConfig().get("startSequence");
@@ -53,7 +46,7 @@ public class SampleActivity implements Runnable {
 			data.getObject().put("description", "Activity was created on " + new Date());
 			data.getObject().put("image", "https://community.jivesoftware.com/servlet/JiveServlet/showImage/102-99994-1-1023036/j.png");
 
-			jiveSDKManager.getJiveClient().sendExternalStreamActivity(tileInstance, data);
+			JiveSDKManager.getInstance().getJiveClient().sendExternalStreamActivity(tileInstance, data);
 			tileInstance.getConfig().put("startSequence", String.valueOf(count + 1));
 			database.save();
 
@@ -62,23 +55,10 @@ public class SampleActivity implements Runnable {
 		} catch (InvalidRequestException e) {
 			e.printStackTrace();
 		} catch (TileUninstalledException e) {
-			e.printStackTrace();
+			unregister();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	@Override
-	public void run() {
-		postUpdate();
-
-	}
-
-	public void setTileInstance(TileInstance tileInstance) {
-		this.tileInstance = tileInstance;
-	}
-
-	public TileInstance getTileInstance() {
-		return tileInstance;
-	}
 }

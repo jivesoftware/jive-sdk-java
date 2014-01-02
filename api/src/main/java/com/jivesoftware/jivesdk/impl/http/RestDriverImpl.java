@@ -94,14 +94,14 @@ public class RestDriverImpl implements RestDriver {
 
             if (statusCode >= 200 && statusCode <= 299) {
                 if (entity != null) {
-                    response = new DealRoomHttpResponseImpl(statusCode, headers, entity.getContent());
+                    response = new JiveSDKHttpResponse(statusCode, headers, entity.getContent());
                 } else {
-                    response = new DealRoomHttpResponseImpl(statusCode, headers, "");
+                    response = new JiveSDKHttpResponse(statusCode, headers, "");
                 }
             } else {
                 String responseBody = getEntityBody(entity);
                 log.error(String.format("Received HTTP response [%d]: %s", statusCode, responseBody));
-                response = new DealRoomHttpResponseImpl(statusCode, headers, responseBody);
+                response = new JiveSDKHttpResponse(statusCode, headers, responseBody);
             }
 
             return response;
@@ -156,7 +156,7 @@ public class RestDriverImpl implements RestDriver {
                 headers.put(header.getName(), header.getValue());
             }
 
-            response = new DealRoomHttpResponseImpl(statusCode, headers, responseBody);
+            response = new JiveSDKHttpResponse(statusCode, headers, responseBody);
             if (statusCode < 200 || statusCode > 299) {
                 log.error(String.format("Received HTTP response [%d]: %s", statusCode, responseBody));
                 // TODO: Is it ok to throw a RestAccessException here instead of returning the response?

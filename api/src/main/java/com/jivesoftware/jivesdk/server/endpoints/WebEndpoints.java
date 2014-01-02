@@ -138,7 +138,7 @@ public class WebEndpoints {
 
     private boolean verifyReplacementsAreValid(@Nonnull Map<String, String> replacements) {
         String s = replacements.get(HOST_SUFFIX);
-        return (StringUtils.isEmpty(s) || s.equals(ServerConstants.Endpoints.V2_PREFIX));
+        return (StringUtils.isEmpty(s));
     }
 
     private Response getStreamResponse(@Nonnull String filename, @Nonnull String mediaType) {

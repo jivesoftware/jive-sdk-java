@@ -18,25 +18,49 @@ package com.jivesoftware.jivesdk.example;
 import com.jivesoftware.jivesdk.api.*;
 import com.jivesoftware.jivesdk.example.db.Database;
 import com.jivesoftware.jivesdk.example.db.JiveInstance;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import javax.inject.Inject;
 import java.io.IOException;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.*;
 
 /**
  */
 public class MyInstanceRegistrationHandlerImpl implements InstanceRegistrationHandler {
 
-	@Inject
-	Database database;
+	Database database = Database.getInstance();
+	private ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
+	private Logger log = LoggerFactory.getLogger(getClass());
 
-	@Inject
-	private ScheduledExecutorService scheduledThreadPoolExecutor;
+	private Map<String, Future> runningTasks = new HashMap<String, Future>();
 
 	public MyInstanceRegistrationHandlerImpl() {
 		System.out.println("MyInstanceRegistrationHandlerImpl");
+	}
+
+	public Runnable createTileRunnable(TileInstance tileInstance) {
+		SampleTileRunner ret;
+		if(tileInstance.getTileDefName().equals("samplelist")) {
+			SampleListTile sampleListTile = new SampleListTile();
+			ret = sampleListTile;
+		} else if (tileInstance.getTileDefName().equals("sampletable")) {
+			SampleTableTile sampleTableTile =  new SampleTableTile();
+			ret = sampleTableTile;
+		} else if (tileInstance.getTileDefName().equals("sampleactivity")) {
+			SampleActivity sampleTableTile =  new SampleActivity();
+			ret = sampleTableTile;
+
+		} else {
+			log.error("Unknown tileInstance type '" + tileInstance.getTileDefName() + "'");
+			return null;
+		}
+		ret.setTileInstance(tileInstance);
+		ret.setInstanceRegistrationHandler(this);
+
+		return ret;
 	}
 
 	@Nonnull
@@ -66,16 +90,43 @@ public class MyInstanceRegistrationHandlerImpl implements InstanceRegistrationHa
 		TileInstance tileInstance = new TileInstance(request);
 		Credentials credentials = JiveSDKManager.getInstance().getJiveCredentialsAcquirer().acquireCredentials(request);
 		tileInstance.setCredentials(credentials);
-		database.tileInstances().put(request.getGuid(), tileInstance);
+		database.tileInstances().put(request.getGlobalTileInstanceID(), tileInstance);
 		try {
 			database.save();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		Runnable tileRunnable = Main.createTileRunnable(tileInstance);
+		startRunnable(tileInstance);
+	}
+
+	public void startRunnable(TileInstance tileInstance) {
+		Runnable tileRunnable = createTileRunnable(tileInstance);
 		if(tileRunnable != null) {
-			scheduledThreadPoolExecutor.scheduleWithFixedDelay(tileRunnable, 1, 30,
-				TimeUnit.SECONDS);
+			ScheduledFuture<?> scheduledFuture = scheduledThreadPoolExecutor.scheduleWithFixedDelay(tileRunnable, 1, 30,
+					TimeUnit.SECONDS);
+			runningTasks.put(tileInstance.getGlobalTileInstanceId(), scheduledFuture);
+		}
+	}
+
+	@Override
+	public void unregister(TileUnregisterRequest unRegistrationRequest) {
+		TileInstance tileInstance = database.tileInstances().get(unRegistrationRequest.getGlobalTileInstanceID());
+		if(tileInstance != null) {
+			unregister(tileInstance);
+		}
+	}
+
+	public void unregister(TileInstance tileInstance) {
+		database.tileInstances().remove(tileInstance.getGlobalTileInstanceId());
+		Future future = runningTasks.get(tileInstance.getGlobalTileInstanceId());
+		if(future != null) {
+			future.cancel(false);
+		}
+		runningTasks.remove(tileInstance);
+		try {
+			database.save();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -86,5 +137,13 @@ public class MyInstanceRegistrationHandlerImpl implements InstanceRegistrationHa
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void setScheduledThreadPoolExecutor(ScheduledThreadPoolExecutor scheduledThreadPoolExecutor) {
+		this.scheduledThreadPoolExecutor = scheduledThreadPoolExecutor;
+	}
+
+	public ScheduledThreadPoolExecutor getScheduledThreadPoolExecutor() {
+		return scheduledThreadPoolExecutor;
 	}
 }

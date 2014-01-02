@@ -170,8 +170,8 @@ public class JiveClientImpl implements JiveClient {
 
             switch (statusCode) {
                 case HttpStatus.SC_GONE: {
-                    log.debug("received gone response from jive on item #" + item.getGuid());
-                    throw new TileUninstalledException();
+                    log.debug("received gone response from jive on item #" + item.getGlobalTileInstanceId());
+                    throw new TileUninstalledException(item);
                 }
                 case HttpStatus.SC_FORBIDDEN: {
                     throw new AuthTokenException(request.getUrl(), JiveSDKUtils.readStringFromResponse(response));
@@ -196,7 +196,7 @@ public class JiveClientImpl implements JiveClient {
                 String oldAuthToken = item.getCredentials().getAuthToken();
                 if (jiveTokenRefresher.refreshToken(item) != null) {
                     String newAuthToken = item.getCredentials().getAuthToken();
-                    log.debug(String.format("Refresh auth. token succeeded for item %s, updating auth. token to %s (old is: %s)", item.getGuid(), newAuthToken, oldAuthToken));
+                    log.debug(String.format("Refresh auth. token succeeded for item %s, updating auth. token to %s (old is: %s)", item.getGlobalTileInstanceId(), newAuthToken, oldAuthToken));
                     request.withOAuth(newAuthToken);
                     response = sendItemToJive(request, item, logSendingMessage, expectedResponses, false);
                 } else {
@@ -206,7 +206,7 @@ public class JiveClientImpl implements JiveClient {
                 log.error("Item access token unauthorized even after refresh: " + item);
             }
         } catch (RestAccessException e) {
-            log.error("Access Exception, therefore failed sending to API Gateway: item #" + item.getGuid());
+            log.error("Access Exception, therefore failed sending to API Gateway: item #" + item.getGlobalTileInstanceId());
         }
 
         return response;
@@ -266,7 +266,7 @@ public class JiveClientImpl implements JiveClient {
         }
 
         if (needToFreeze) {
-            log.debug("received freeze" + item.getGuid());
+            log.debug("received freeze" + item.getGlobalTileInstanceId());
             throw new InvalidRequestException();
         }
     }
