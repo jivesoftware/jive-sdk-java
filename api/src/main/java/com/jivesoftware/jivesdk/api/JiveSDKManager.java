@@ -3,6 +3,8 @@ package com.jivesoftware.jivesdk.api;
 import com.jivesoftware.externalclient.JiveOAuthClient;
 import com.jivesoftware.jivesdk.impl.auth.jiveauth.JiveInstanceOAuthTokenRefresher;
 import com.jivesoftware.jivesdk.impl.http.*;
+import com.jivesoftware.jivesdk.server.JiveAuthorizationValidator;
+import com.jivesoftware.jivesdk.server.JiveAuthorizationValidatorImpl;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -22,6 +24,7 @@ public class JiveSDKManager {
 	private JiveInstanceOAuthTokenRefresher jiveTokenRefresher;
 
 	private InstanceRegistrationHandler instanceRegistrationHandler;
+	private JiveAuthorizationValidator authorizationValidator;
 
 	public JiveSDKManager() {
 		// The order of initialization here matters.  Since this is an api we don't use
@@ -38,6 +41,7 @@ public class JiveSDKManager {
 		jiveClient = new JiveClientImpl();
 		jiveClient.setRestDriver(restDriver);
 		jiveClient.setJiveTokenRefresher(jiveTokenRefresher);
+		authorizationValidator = new JiveAuthorizationValidatorImpl();
 		instance = this;
 
 	}
@@ -82,5 +86,10 @@ public class JiveSDKManager {
 	public JiveTokenRefresher getJiveTokenRefresher() {
 		return jiveTokenRefresher;
 	}
+
+	public JiveAuthorizationValidator getAuthorizationValidator() {
+		return authorizationValidator;
+	}
+
 
 }

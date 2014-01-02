@@ -1,18 +1,14 @@
 package com.jivesoftware.jivesdk.server.endpoints;
 
-import com.jivesoftware.jivesdk.api.InstanceRegistrationHandler;
-import com.jivesoftware.jivesdk.impl.utils.JiveSDKUtils;
-import com.jivesoftware.jivesdk.server.AuthenticationResponse;
+import com.jivesoftware.jivesdk.api.JiveSDKManager;
 import com.jivesoftware.jivesdk.server.JiveAuthorizationValidator;
 import com.jivesoftware.jivesdk.server.JiveAuthorizationValidatorImpl;
-import org.apache.http.HttpStatus;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.CacheControl;
@@ -21,7 +17,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -37,7 +32,7 @@ public abstract class AbstractEndpoint {
     public static final String OK = "ok";
     public static final String EXPIRED = "expired";
 
-    private JiveAuthorizationValidator jiveAuthorizationValidator = new JiveAuthorizationValidatorImpl();
+    JiveAuthorizationValidator jiveAuthorizationValidator = JiveSDKManager.getInstance().getAuthorizationValidator();
 
 
     @Nonnull
@@ -48,29 +43,7 @@ public abstract class AbstractEndpoint {
         return cacheControl;
     }
 
-    @Nonnull
-    protected AuthenticationResponse authenticateV2Request(String authorization, @Nullable String jiveInstanceUrl, @Nullable String tenantId) {
-		if(authorization == null) {
-			return new AuthenticationResponse(HttpStatus.SC_UNAUTHORIZED);
-		}
-
-        if (JiveSDKUtils.isAllExist(jiveInstanceUrl, tenantId)) {
-            Map<String, String> params = jiveAuthorizationValidator.getParamsFromAuthz(authorization);
-            String paramJiveUrl = params.get(JiveAuthorizationValidator.PARAM_JIVE_URL);
-            String paramTenantId = params.get(JiveAuthorizationValidator.PARAM_TENANT_ID);
-            //noinspection ConstantConditions
-            if (!jiveInstanceUrl.equals(paramJiveUrl) || !tenantId.equals(paramTenantId)) {
-                String msg = String.format("Failed authenticating V2 request. Jive URL: [%s] vs. [%s], Tenant ID: [%s] vs [%s]",
-                        jiveInstanceUrl, paramJiveUrl, tenantId, paramTenantId);
-                log.error(msg);
-                return new AuthenticationResponse(HttpStatus.SC_UNAUTHORIZED);
-            }
-        }
-
-        return jiveAuthorizationValidator.authenticate(authorization);
-    }
-
-    @Nonnull
+	@Nonnull
     protected ObjectNode logErrorAndCreateErrorResponse(@Nonnull String msg) {
         log.error(msg);
         ObjectNode errorObj = new ObjectMapper().createObjectNode();

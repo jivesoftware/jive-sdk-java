@@ -1,6 +1,7 @@
 package com.jivesoftware.jivesdk.server;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Map;
 
 
@@ -20,8 +21,32 @@ public interface JiveAuthorizationValidator {
     public static final String PARAM_SIGNATURE = "signature";
     String JIVE_EXTN = "JiveEXTN ";
 
-    @Nonnull
-    Map<String, String> getParamsFromAuthz(@Nonnull String authz);
+	/**
+	 * validate the Authorization header.  Make sure it is a JiveEXTN style header with the correct signature.
+	 * @param authHeader
+	 * @return
+	 */
+	@Nonnull
+	AuthenticationResponse authenticate(@Nonnull String authHeader );
 
-    AuthenticationResponse authenticate(@Nonnull String authz);
+	/**
+	 * validate the Authorization header.  Make sure it is a JiveEXTN style header with the correct signature. Also
+	 * make sure the jiveUrl and tenantId match the expected input.
+	 * @param authHeader
+	 * @return
+	 */
+	@Nonnull
+	AuthenticationResponse authenticate(String authHeader, @Nullable String jiveUrl, @Nullable String tenantId);
+
+	/**
+	 * Parse the Authorization header and pull out the parameters from the request.
+	 *
+	 * NOTE this does not validate the signature nor check whether it is a JiveEXTN header.  Use authenticate validate
+	 * this header.
+	 *
+	 * @param authHeader
+	 * @return
+	 */
+	@Nonnull
+	Map<String, String> getParamsFromAuthz(@Nonnull String authHeader);
 }

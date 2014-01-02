@@ -3,7 +3,6 @@ package com.jivesoftware.jivesdk.server.endpoints;
 import com.jivesoftware.jivesdk.api.JiveSDKManager;
 import com.jivesoftware.jivesdk.api.TileRegistrationRequest;
 import com.jivesoftware.jivesdk.api.TileUnregisterRequest;
-import com.jivesoftware.jivesdk.impl.PropertyConfiguration;
 import com.jivesoftware.jivesdk.impl.utils.JiveSDKUtils;
 import com.jivesoftware.jivesdk.server.AuthenticationResponse;
 import com.jivesoftware.jivesdk.server.ServerConstants;
@@ -26,13 +25,11 @@ import javax.ws.rs.core.Response;
  * Time: 6:23 PM
  */
 @Path(ServerConstants.Endpoints.TILE)
-public class RegistrationEndpointsImpl extends AbstractEndpoint  {
+public class TileEndpoints extends AbstractEndpoint  {
     public static final String PROPERTY_NAME_EXT_PROPS = "extprops";
     public static final String DELIM = ";///;";
-    protected static final Logger log = LoggerFactory.getLogger(RegistrationEndpointsImpl.class);
-    protected static final String FAILED_REGISTERING_DEAL_ROOM = "Failed registering deal room.";
-
-    protected PropertyConfiguration configuration = PropertyConfiguration.getInstance();
+    protected static final Logger log = LoggerFactory.getLogger(TileEndpoints.class);
+    protected static final String FAILED_REGISTERING_TILE = "Failed registering tile.";
 
     @GET
     @Path("/ping")
@@ -48,14 +45,15 @@ public class RegistrationEndpointsImpl extends AbstractEndpoint  {
         try {
             log.debug("Received registration request: " + tileRegistrationRequest);
 
-            String jiveInstanceUrl = tileRegistrationRequest.getJiveUrl();
+            String jiveUrl = tileRegistrationRequest.getJiveUrl();
             String tenantId = tileRegistrationRequest.getTenantID();
-            if (!JiveSDKUtils.isAllExist(jiveInstanceUrl, tenantId)) {
-                String msg = String.format("Jive instance URL [%s] / Tenant ID [%s] are missing from V2 registration request", jiveInstanceUrl, tenantId);
+            if (!JiveSDKUtils.isAllExist(jiveUrl, tenantId)) {
+                String msg = String.format("Jive instance URL [%s] / Tenant ID [%s] are missing from V2 registration request", jiveUrl, tenantId);
                 log.warn(msg);
             }
 
-            AuthenticationResponse authResponse = authenticateV2Request(authorization, jiveInstanceUrl, tenantId);
+            AuthenticationResponse authResponse = jiveAuthorizationValidator.authenticate(authorization, jiveUrl,
+					tenantId);
             if (!authResponse.isAuthenticated()) {
                 log.error("Registration request unauthorized: " + tileRegistrationRequest);
                 return Response.status(authResponse.getStatusCode()).build();
@@ -67,7 +65,7 @@ public class RegistrationEndpointsImpl extends AbstractEndpoint  {
 
             return doRegister(tileRegistrationRequest);
         } catch (Throwable t) {
-            return returnResponseOnThrowable(t, FAILED_REGISTERING_DEAL_ROOM);
+            return returnResponseOnThrowable(t, FAILED_REGISTERING_TILE);
         }
     }
 
@@ -103,7 +101,7 @@ public class RegistrationEndpointsImpl extends AbstractEndpoint  {
             return Response.status(HttpStatus.SC_OK).entity(resultJson).build();
 
         } catch (Exception e) {
-            return returnResponseOnThrowable(e, FAILED_REGISTERING_DEAL_ROOM);
+            return returnResponseOnThrowable(e, FAILED_REGISTERING_TILE);
         }
     }
 
@@ -122,7 +120,8 @@ public class RegistrationEndpointsImpl extends AbstractEndpoint  {
 				log.warn(msg);
 			}
 
-			AuthenticationResponse authResponse = authenticateV2Request(authorization, jiveInstanceUrl, tenantId);
+			AuthenticationResponse authResponse = jiveAuthorizationValidator.authenticate(authorization,
+					jiveInstanceUrl, tenantId);
 			if (!authResponse.isAuthenticated()) {
 				log.error("Registration request unauthorized: " + unRegistrationRequest);
 				return Response.status(authResponse.getStatusCode()).build();
@@ -144,7 +143,7 @@ public class RegistrationEndpointsImpl extends AbstractEndpoint  {
 			log.debug("Registration success, responding with: " + resultJson);
 			return Response.status(HttpStatus.SC_OK).entity(resultJson).build();
 		} catch (Throwable t) {
-			return returnResponseOnThrowable(t, FAILED_REGISTERING_DEAL_ROOM);
+			return returnResponseOnThrowable(t, FAILED_REGISTERING_TILE);
 		}
 	}
 

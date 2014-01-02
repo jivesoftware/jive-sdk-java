@@ -5,12 +5,14 @@ import com.jivesoftware.jivesdk.api.InstanceRegistrationHandler;
 import com.jivesoftware.jivesdk.api.JiveSDKManager;
 import com.jivesoftware.jivesdk.api.RegisteredInstance;
 import com.jivesoftware.jivesdk.impl.utils.JiveSDKUtils;
+import com.jivesoftware.jivesdk.server.endpoints.AbstractEndpoint;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
@@ -32,13 +34,13 @@ public class JiveAuthorizationValidatorImpl implements JiveAuthorizationValidato
 
     @Nonnull
     @Override
-    public Map<String, String> getParamsFromAuthz(@Nonnull String authz) {
-        if (!authz.startsWith(JIVE_EXTN)) {
+    public Map<String, String> getParamsFromAuthz(@Nonnull String authHeader) {
+        if (!authHeader.startsWith(JIVE_EXTN)) {
             return Maps.newHashMap();
         }
 
-        authz = authz.substring(JIVE_EXTN.length());
-        String[] params = authz.split("[?|&]");
+        authHeader = authHeader.substring(JIVE_EXTN.length());
+        String[] params = authHeader.split("[?|&]");
         Map<String, String> paramMap = Maps.newHashMap();
         for (String param : params) {
             String[] tokens = param.split("=");
@@ -53,16 +55,16 @@ public class JiveAuthorizationValidatorImpl implements JiveAuthorizationValidato
     }
 
     @Override
-    public AuthenticationResponse authenticate(@Nonnull String authz ) {
+    public AuthenticationResponse authenticate(@Nonnull String authorization) {
 		InstanceRegistrationHandler jiveInstanceHandler = JiveSDKManager.getInstance().getInstanceRegistrationHandler();
 
         try {
-            if (!authz.startsWith(JIVE_EXTN) || !authz.contains(QUERY_PARAM_SIGNATURE)) {
-                log.error("Jive authorization isn't properly formatted: " + authz);
+            if (!authorization.startsWith(JIVE_EXTN) || !authorization.contains(QUERY_PARAM_SIGNATURE)) {
+                log.error("Jive authorization isn't properly formatted: " + authorization);
                 return badRequest();
             }
 
-            Map<String, String> paramMap = getParamsFromAuthz(authz);
+            Map<String, String> paramMap = getParamsFromAuthz(authorization);
             String signature = paramMap.remove(PARAM_SIGNATURE);
             String algorithm = paramMap.get(PARAM_ALGORITHM);
             String clientId = paramMap.get(PARAM_CLIENT_ID);
@@ -95,12 +97,12 @@ public class JiveAuthorizationValidatorImpl implements JiveAuthorizationValidato
             }
 
             String clientSecret = instance.getClientSecret();
-            String paramStrWithoutSignature = authz.substring(JIVE_EXTN.length(), authz.indexOf(QUERY_PARAM_SIGNATURE));
+            String paramStrWithoutSignature = authorization.substring(JIVE_EXTN.length(), authorization.indexOf(QUERY_PARAM_SIGNATURE));
             String expectedSignature = sign(paramStrWithoutSignature, clientSecret, algorithm);
             if (expectedSignature.equals(signature)) {
                 return new AuthenticationResponse(clientId, clientSecret, instance);
             } else {
-                log.error("Jive authorization failed due to tampered signature! Original authz: " + authz);
+                log.error("Jive authorization failed due to tampered signature! Original authz: " + authorization);
                 return unAuthorized();
             }
         } catch (Exception e) {
@@ -128,4 +130,28 @@ public class JiveAuthorizationValidatorImpl implements JiveAuthorizationValidato
     protected AuthenticationResponse unAuthorized() {
         return new AuthenticationResponse(HttpStatus.SC_UNAUTHORIZED);
     }
+
+	@Override
+	@Nonnull
+	public AuthenticationResponse authenticate(String authHeader, @Nullable String jiveUrl,
+											   @Nullable String tenantId) {
+		if(authHeader == null) {
+			return new AuthenticationResponse(HttpStatus.SC_UNAUTHORIZED);
+		}
+
+		if (JiveSDKUtils.isAllExist(jiveUrl, tenantId)) {
+			Map<String, String> params = getParamsFromAuthz(authHeader);
+			String paramJiveUrl = params.get(PARAM_JIVE_URL);
+			String paramTenantId = params.get(PARAM_TENANT_ID);
+			//noinspection ConstantConditions
+			if (!jiveUrl.equals(paramJiveUrl) || !tenantId.equals(paramTenantId)) {
+				String msg = String.format("Failed authenticating V2 request. Jive URL: [%s] vs. [%s], Tenant ID: [%s] vs [%s]",
+						jiveUrl, paramJiveUrl, tenantId, paramTenantId);
+				log.error(msg);
+				return new AuthenticationResponse(HttpStatus.SC_UNAUTHORIZED);
+			}
+		}
+
+		return authenticate(authHeader);
+	}
 }
