@@ -12,13 +12,11 @@ import org.fest.reflect.core.Reflection;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.util.Map;
 import java.util.UUID;
 
 import static com.jivesoftware.jivesdk.api.JiveAuthorizationValidator.*;
-import static org.junit.Assert.fail;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
