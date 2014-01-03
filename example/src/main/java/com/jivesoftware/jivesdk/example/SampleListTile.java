@@ -26,23 +26,26 @@ import com.jivesoftware.jivesdk.api.tiles.TileStyle;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
  */
 public class SampleListTile extends SampleTileRunner {
-	private TileInstance tileInstance;
 
+	private SimpleDateFormat shortDate = new SimpleDateFormat("MM-dd HH:mm:ss");
 	public void run() {
 		try {
 			TileData<ListItem> data = new TileData<ListItem>(TileStyle.LIST);
+			String countString = tileInstance.getConfig().get("startSequence");
+			int count = countString == null ? 1: Integer.parseInt(countString);
 			data.setTitle("New Title");
-			ListItem l1 = new ListItem("push 1 " + new Date());
+			ListItem l1 = new ListItem("push 1 (" + count + ") " + shortDate.format(new Date()));
 			TileAction action1 = new TileAction("blah", "http://lmgtfy.com/?q=jive+purposeful+place+docs");
 
 			l1.setAction(action1);
 			data.getContents().add(l1);
-			ListItem l2 = new ListItem("push 2 " + new Date());
+			ListItem l2 = new ListItem("push 2 (" + count + ") " + shortDate.format(new Date()));
 			TileAction action2 = new TileAction();
 			action2.getContext().put("q", "jive software");
 			l2.setAction(action2);
@@ -53,6 +56,10 @@ public class SampleListTile extends SampleTileRunner {
 			action.setText("action");
 			data.setAction(action);
 			JiveSDKManager.getInstance().getJiveClient().sendPutTileUpdate(tileInstance, data);
+			tileInstance.getConfig().put("startSequence", String.valueOf(count + 1));
+			database.save();
+
+
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		} catch (InvalidRequestException e) {
