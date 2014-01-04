@@ -28,14 +28,7 @@ import static org.mockito.Mockito.when;
  * Date: 7/8/13
  * Time: 8:02 PM
  */
-public class JiveAuthorizationValidatorImplTest {
-
-	private JiveAuthorizationValidator jiveAuthorizationValidator;
-
-	@Before
-	public void setUp() throws Exception {
-		jiveAuthorizationValidator = new JiveAuthorizationValidatorImpl();
-	}
+public class JiveAuthorizationValidatorImplTest extends JiveSDKTestBase {
 
 	@Test
 	public void getParamsFromAuthz() {
@@ -60,23 +53,6 @@ public class JiveAuthorizationValidatorImplTest {
 
 	@Test
 	public void authenticate() {
-		String algorithm = "HmacSHA256";
-		String clientId = "abdef";
-		String url = "http://foo.bar";
-		String tenantId = "1235-2342342-abc";
-		String clientSecret = "abcdefg";
-		long id = 5;
-		InstanceRegistrationHandler instanceHandler = mock(InstanceRegistrationHandler.class);
-		RegisteredInstance registeredInstance = mock(RegisteredInstance.class);
-
-		when(instanceHandler.getByTenantId(anyString())).thenReturn(registeredInstance);
-		when(registeredInstance.getClientId()).thenReturn(clientId);
-		when(registeredInstance.getClientSecret()).thenReturn(clientSecret);
-		when(registeredInstance.getTenantId()).thenReturn(tenantId);
-		when(registeredInstance.getUrl()).thenReturn(url);
-		when(registeredInstance.getId()).thenReturn(id);
-
-		JiveSDKManager.getInstance().setInstanceRegistrationHandler(instanceHandler);
 		String timestamp = String.valueOf(System.currentTimeMillis());
 		String authzNoSignature = createAuthzString(false, algorithm, clientId, url, tenantId, timestamp);
 		String signature = Reflection.
