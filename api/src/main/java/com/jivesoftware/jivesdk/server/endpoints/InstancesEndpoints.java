@@ -1,10 +1,12 @@
 package com.jivesoftware.jivesdk.server.endpoints;
 
-import com.jivesoftware.jivesdk.api.*;
+import com.jivesoftware.jivesdk.api.InstanceRegistrationRequest;
+import com.jivesoftware.jivesdk.api.JiveSDKManager;
+import com.jivesoftware.jivesdk.api.JiveSignatureValidator;
+import com.jivesoftware.jivesdk.api.RegisteredInstance;
 import com.jivesoftware.jivesdk.impl.auth.jiveauth.JiveSignatureValidatorImpl;
 import com.jivesoftware.jivesdk.impl.utils.JiveSDKUtils;
 import com.jivesoftware.jivesdk.server.ServerConstants;
-import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
@@ -12,7 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
@@ -24,6 +25,7 @@ import javax.ws.rs.core.Response;
  * Date: 17/7/13
  * Time: 11:00 AM
  */
+@SuppressWarnings("UnusedDeclaration")
 @Path(ServerConstants.Endpoints.INSTANCE)
 @Consumes(MediaType.APPLICATION_JSON)
 public class InstancesEndpoints extends AbstractEndpoint {
@@ -50,8 +52,7 @@ public class InstancesEndpoints extends AbstractEndpoint {
      */
     @POST
     @Path(ServerConstants.Endpoints.REGISTER)
-    public Response register(@HeaderParam(HttpHeaders.USER_AGENT) String userAgent,
-                             InstanceRegistrationRequest request) {
+    public Response register(InstanceRegistrationRequest request) {
         try {
             if (request == null) {
                 log.error("Invalid request");
@@ -71,7 +72,8 @@ public class InstancesEndpoints extends AbstractEndpoint {
                 return unAuthorized();
             }
 
-            RegisteredInstance registeredInstance = JiveSDKManager.getInstance().getInstanceRegistrationHandler().register(request);
+            RegisteredInstance registeredInstance = JiveSDKManager.getInstance().getInstanceRegistrationHandler()
+                    .register(request);
             if (registeredInstance == null) {
                 log.error("Failed registering instance");
                 return serverError();
@@ -80,7 +82,8 @@ public class InstancesEndpoints extends AbstractEndpoint {
 
             log.debug("register success.");
             return Response.noContent().build();
-        } catch (Throwable t) {
+        }
+        catch (Throwable t) {
             t.printStackTrace();
             log.error("Caught exception", t);
             ObjectNode errorNode = logErrorAndCreateErrorResponse(t.getLocalizedMessage());

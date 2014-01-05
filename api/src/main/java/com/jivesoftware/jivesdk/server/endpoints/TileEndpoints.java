@@ -24,18 +24,11 @@ import javax.ws.rs.core.Response;
  * Date: 17/7/13
  * Time: 6:23 PM
  */
+@SuppressWarnings("UnusedDeclaration")
 @Path(ServerConstants.Endpoints.TILE)
 public class TileEndpoints extends AbstractEndpoint  {
-    public static final String PROPERTY_NAME_EXT_PROPS = "extprops";
-    public static final String DELIM = ";///;";
     protected static final Logger log = LoggerFactory.getLogger(TileEndpoints.class);
     protected static final String FAILED_REGISTERING_TILE = "Failed registering tile.";
-
-    @GET
-    @Path("/ping")
-    public Response ping() {
-        return Response.ok().build();
-    }
 
     @POST
     @Path(ServerConstants.Endpoints.REGISTER)
@@ -48,7 +41,7 @@ public class TileEndpoints extends AbstractEndpoint  {
             String jiveUrl = tileRegistrationRequest.getJiveUrl();
             String tenantId = tileRegistrationRequest.getTenantID();
             if (!JiveSDKUtils.isAllExist(jiveUrl, tenantId)) {
-                String msg = String.format("Jive instance URL [%s] / Tenant ID [%s] are missing from V2 registration request", jiveUrl, tenantId);
+                String msg = String.format("Jive instance URL [%s] / Tenant ID [%s] are missing from registration request", jiveUrl, tenantId);
                 log.warn(msg);
             }
 
@@ -93,8 +86,6 @@ public class TileEndpoints extends AbstractEndpoint  {
 
             ObjectMapper objectMapper = new ObjectMapper();
             ObjectNode result = objectMapper.createObjectNode();
-           /* ObjectNode propsNode = objectMapper.createObjectNode();
-            result.put(PROPERTY_NAME_EXT_PROPS, propsNode);*/
             String resultJson = result.toString();
 
             log.debug("Registration success, responding with: " + resultJson);
@@ -116,7 +107,7 @@ public class TileEndpoints extends AbstractEndpoint  {
 			String jiveInstanceUrl = unRegistrationRequest.getJiveUrl();
 			String tenantId = unRegistrationRequest.getTenantID();
 			if (!JiveSDKUtils.isAllExist(jiveInstanceUrl, tenantId)) {
-				String msg = String.format("Jive instance URL [%s] / Tenant ID [%s] are missing from V2 registration request", jiveInstanceUrl, tenantId);
+				String msg = String.format("Jive instance URL [%s] / Tenant ID [%s] are missing from registration request", jiveInstanceUrl, tenantId);
 				log.warn(msg);
 			}
 
@@ -136,8 +127,6 @@ public class TileEndpoints extends AbstractEndpoint  {
 
 			ObjectMapper objectMapper = new ObjectMapper();
 			ObjectNode result = objectMapper.createObjectNode();
-           /* ObjectNode propsNode = objectMapper.createObjectNode();
-            result.put(PROPERTY_NAME_EXT_PROPS, propsNode);*/
 			String resultJson = result.toString();
 
 			log.debug("Registration success, responding with: " + resultJson);
