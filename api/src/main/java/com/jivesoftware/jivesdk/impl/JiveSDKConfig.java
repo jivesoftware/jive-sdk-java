@@ -31,13 +31,9 @@ public class JiveSDKConfig {
 
 
     public enum ServiceConfiguration {
-        SFDC_REDIRECT_URL(""),
-        LONG_RUNNING_JOB_THRESHOLD_IN_SECONDS("900"),
-        COMMENT_SYNCER_BASE_URL("http://dealroom-qa-app1.jca.eng.jiveland.com/36000"),
-        DATA_POLLER_BASE_URL("http://dealroom-qa-app1.jca.eng.jiveland.com/38000"),
         IGNORE_HTTP_SIGNATURE_URLS_IN_INSTANCE_REGISTRATION("false"),
-        SIGNATURE_URL_CERTIFICATE_SUBJECT_NAME("Jive Software, Inc."),
-        ENABLE_TITAN_MIGRATION("true");
+        SIGNATURE_URL_CERTIFICATE_SUBJECT_NAME("Jive Software, Inc.");
+
         private String defaultValue;
 
         private ServiceConfiguration(String defaultValue) {

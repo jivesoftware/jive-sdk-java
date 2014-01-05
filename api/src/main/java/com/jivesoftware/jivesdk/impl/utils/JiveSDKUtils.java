@@ -1,7 +1,6 @@
 package com.jivesoftware.jivesdk.impl.utils;
 
 import com.google.common.base.Optional;
-import com.jivesoftware.jivesdk.api.RegisteredInstance;
 import com.jivesoftware.jivesdk.impl.http.HttpResponse;
 import com.jivesoftware.jivesdk.server.ServerConstants;
 import org.apache.commons.codec.binary.Base64;
@@ -18,26 +17,23 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
-import java.util.Map;
-import java.util.regex.Pattern;
 
 /**
  * Internal utility methods. These should not be used by client apps.
- *
+ * <p/>
  * There is no guarentee on backward compatiblity of these methods.
  */
 public class JiveSDKUtils {
     private static final Logger log = LoggerFactory.getLogger(JiveSDKUtils.class);
-    private static final Logger criticalLogger = LoggerFactory.getLogger("dealroomCriticalLogger");
     public static final String UTF_8 = "UTF-8";
-    public static final Pattern PATTERN_NO_SUCH_COLUMN = Pattern.compile(".*No such column '(\\w*)' on entity '(\\w*)'.*");
     public static final String ACTIVITIES = "/activities";
 
     @Nonnull
     public static byte[] getBytes(@Nonnull String s) {
         try {
             return s.getBytes(UTF_8);
-        } catch (UnsupportedEncodingException e) {
+        }
+        catch (UnsupportedEncodingException e) {
             log.warn("Failed reading UTF-8 bytes from string", e);
             return s.getBytes();
         }
@@ -47,20 +43,22 @@ public class JiveSDKUtils {
     public static String encodeUrl(@Nonnull String url) {
         try {
             return URLEncoder.encode(url, UTF_8);
-        } catch (UnsupportedEncodingException e) {
+        }
+        catch (UnsupportedEncodingException e) {
             log.warn("Failed encoding URL using UTF-8 charset", e);
-			//noinspection deprecation
-			return URLEncoder.encode(url);
+            //noinspection deprecation
+            return URLEncoder.encode(url);
         }
     }
 
     public static String decodeUrl(@Nonnull String url) {
         try {
             return URLDecoder.decode(url, UTF_8);
-        } catch (UnsupportedEncodingException e) {
+        }
+        catch (UnsupportedEncodingException e) {
             log.warn("Failed decoding URL using UTF-8 charset", e);
-			//noinspection deprecation
-			return URLDecoder.decode(url);
+            //noinspection deprecation
+            return URLDecoder.decode(url);
         }
     }
 
@@ -116,26 +114,9 @@ public class JiveSDKUtils {
     }
 
 
-    /**
-     * Returns a URL pattern (starting with %s to be replaced later with the instance URL) for the given item URL. <br/>
-     * This instance URL <b>MUST BE NORMALIZED</b> (Lower-cased and no trailing '/') to avoid cases where instance URL changes and then '/' is included <br/>
-     * This is handled by: com.jivesoftware.dealroom.masters.RegisteredInstanceMasterImpl#saveOrUpdate
-     *
-     * @param itemUrl  The item URL
-     * @param instance The instance
-     * @return A URL pattern or null if instance URL doesn't match item URL
-     */
-    @Nullable
-    public static String getItemUrlPattern(@Nonnull String itemUrl, @Nonnull RegisteredInstance instance) {
-        String jiveBaseUrl = instance.getUrl();
-        if (itemUrl.startsWith(jiveBaseUrl)) {
-            return itemUrl.replace(jiveBaseUrl, "%s");
-        } else {
-            return null;
-        }
-    }
-
-    public static boolean validateBasicAuthentication(@Nonnull Optional<String> authHeader, @Nonnull String username, @Nonnull String password) {
+    public static boolean validateBasicAuthentication(@Nonnull Optional<String> authHeader, @Nonnull String username,
+                                                      @Nonnull String password)
+    {
         if (!authHeader.isPresent()) {
             return false;
         }
@@ -168,7 +149,8 @@ public class JiveSDKUtils {
                 InputStream stream = optional.get();
                 html = getStringFromStream(stream);
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("Failed reading file: " + filename, e);
         }
 
@@ -193,7 +175,8 @@ public class JiveSDKUtils {
                     }
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("Failed reading input stream", e);
         }
 
@@ -206,7 +189,8 @@ public class JiveSDKUtils {
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
             InputStream inputStream = classLoader.getResourceAsStream(filename);
             return Optional.fromNullable(inputStream);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("Failed reading input stream for file: " + filename, e);
             return Optional.absent();
         }
@@ -231,12 +215,15 @@ public class JiveSDKUtils {
 
             byte[] bytes = buffer.toByteArray();
             s = new String(bytes); // TODO: Removed the UTF-8... is that ok?
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("Failed reading string from stream", e);
-        } finally {
+        }
+        finally {
             try {
                 stream.close();
-            } catch (Exception ignored) {
+            }
+            catch (Exception ignored) {
             }
         }
 
@@ -257,8 +244,9 @@ public class JiveSDKUtils {
 
         try {
             // check not empty
-            if (numberString == null || (numberString.length() <= 0))
+            if (StringUtils.isEmpty(numberString)) {
                 return trim(numberString, length);
+            }
 
             if (!NumberUtils.isNumber(numberString.substring(1))) {
                 return trim(numberString, length);
@@ -280,7 +268,8 @@ public class JiveSDKUtils {
             String newValue = beforeNumber + new DecimalFormat("#,##0.00").format(parsedNumber);
 
             return trim(newValue, length);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex) {
             return originalValue;
         }
     }
@@ -291,8 +280,8 @@ public class JiveSDKUtils {
      *
      * @param items : Checked items
      * @return :
-     *         true -> if all the items are presented.
-     *         false -> if at least one is absent or empty.
+     * true -> if all the items are presented.
+     * false -> if at least one is absent or empty.
      */
     public static boolean isAllExist(@Nullable Object... items) {
         if (items == null) {
@@ -308,56 +297,8 @@ public class JiveSDKUtils {
         return true;
     }
 
-    /**
-     * Check if all the items are presented and not empty
-     *
-     * @param items : Checked items
-     * @return :
-     *         true -> if all the items are presented.
-     *         false -> if at least one is absent or empty.
-     */
-    public static boolean isAllExistO(@Nonnull Optional... items) {
-        for (Optional item : items) {
-            if (!item.isPresent() || item.get().toString().isEmpty()) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    // get a specific value from a row
-    public static <T> T getValueFromMap(Map<String, Object> row, String fieldName) {
-        Object obj = row.get(fieldName);
-        T objValue = null;
-        if (obj != null) {
-            try {
-                //noinspection unchecked
-                objValue = (T) obj;
-            } catch (ClassCastException e) {
-                log.error(String.format("Failed getting value %s from row: %s", fieldName, row));
-            }
-        } else {
-            log.debug("cant get the value of " + fieldName);
-        }
-
-        return objValue;
-    }
-
     @Nonnull
     public static String createHtmlMessage(@Nonnull String msg) {
         return String.format("<html><body>%s</body></html>", msg);
-    }
-
-    public static void sleepBeforeRetrying() {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            log.error("Thread interrupted while sleeping before retrying", e);
-        }
-    }
-
-    public static Logger getCriticalLogger() {
-        return criticalLogger;
     }
 }

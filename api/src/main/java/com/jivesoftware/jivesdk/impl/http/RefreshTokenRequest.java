@@ -1,9 +1,6 @@
 package com.jivesoftware.jivesdk.impl.http;
 
 import com.google.common.collect.Maps;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ObjectNode;
 
 import javax.annotation.Nonnull;
 import java.util.Map;
@@ -23,20 +20,8 @@ public class RefreshTokenRequest {
     private final Map<String, String> bodyFields = Maps.newHashMap();
 
     public RefreshTokenRequest(@Nonnull String refreshTokenValue) {
-        this(GRANT_TYPE_DEFAULT_VALUE, refreshTokenValue);
-    }
-
-    public RefreshTokenRequest(String grantType, String refreshTokenValue) {
-        bodyFields.put(GRANT_TYPE, grantType);
+        bodyFields.put(GRANT_TYPE, GRANT_TYPE_DEFAULT_VALUE);
         bodyFields.put(REFRESH_TOKEN, refreshTokenValue);
-    }
-
-    public final JsonNode getJsonBody() {
-        ObjectNode node = new ObjectMapper().createObjectNode();
-        for (Map.Entry<String, String> entry : bodyFields.entrySet()) {
-            node.put(entry.getKey(), entry.getValue());
-        }
-        return node;
     }
 
     public Map<String, String> getFormParams() {

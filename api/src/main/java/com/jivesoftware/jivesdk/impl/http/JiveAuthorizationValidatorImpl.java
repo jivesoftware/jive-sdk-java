@@ -146,7 +146,7 @@ public class JiveAuthorizationValidatorImpl implements JiveAuthorizationValidato
 			String paramTenantId = params.get(PARAM_TENANT_ID);
 			//noinspection ConstantConditions
 			if (!jiveUrl.equals(paramJiveUrl) || !tenantId.equals(paramTenantId)) {
-				String msg = String.format("Failed authenticating V2 request. Jive URL: [%s] vs. [%s], Tenant ID: [%s] vs [%s]",
+				String msg = String.format("Failed authenticating request. Jive URL: [%s] vs. [%s], Tenant ID: [%s] vs [%s]",
 						jiveUrl, paramJiveUrl, tenantId, paramTenantId);
 				log.error(msg);
 				return new AuthenticationResponse(HttpStatus.SC_UNAUTHORIZED);
