@@ -2,9 +2,9 @@ package com.jivesoftware.jivesdk.impl.http;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
-import com.jivesoftware.externalclient.JiveOAuthClient;
-import com.jivesoftware.externalclient.JiveOAuthRequest;
-import com.jivesoftware.externalclient.JiveOAuthResponse;
+import com.jivesoftware.jivesdk.api.oauth.JiveOAuthClient;
+import com.jivesoftware.jivesdk.api.oauth.JiveOAuthRequest;
+import com.jivesoftware.jivesdk.api.oauth.JiveOAuthResponse;
 import com.jivesoftware.jivesdk.api.*;
 import com.jivesoftware.jivesdk.impl.CredentialsImpl;
 import com.jivesoftware.jivesdk.impl.http.post.RestPostRequestBuilder;

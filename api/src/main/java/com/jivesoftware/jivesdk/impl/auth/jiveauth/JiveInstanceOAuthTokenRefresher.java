@@ -17,7 +17,7 @@ package com.jivesoftware.jivesdk.impl.auth.jiveauth;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
-import com.jivesoftware.externalclient.JiveOAuthResponse;
+import com.jivesoftware.jivesdk.api.oauth.JiveOAuthResponse;
 import com.jivesoftware.jivesdk.api.*;
 import com.jivesoftware.jivesdk.impl.http.AuthTokenException;
 import com.jivesoftware.jivesdk.impl.http.HttpResponse;

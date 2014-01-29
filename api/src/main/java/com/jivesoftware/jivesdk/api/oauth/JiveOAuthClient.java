@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013. Jive Software
+ * Copyright (c) 2014. Jive Software
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -13,20 +13,14 @@
  *    See the License for the specific language governing permissions and
  */
 
-package com.jivesoftware.jivesdk.api;
-
-import com.jivesoftware.jivesdk.api.oauth.JiveOAuthResponse;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+package com.jivesoftware.jivesdk.api.oauth;
 
 /**
  * Created with IntelliJ IDEA.
  * User: Zvoykish
- * Date: 24/7/13
- * Time: 5:31 PM
+ * Date: 17/7/13
+ * Time: 4:21 PM
  */
-public interface JiveTokenRefresher {
-    @Nullable
-	JiveOAuthResponse refreshToken(@Nonnull TileInstance item) throws InvalidRequestException;
+public interface JiveOAuthClient {
+    JiveOAuthResponse getAccessToken(JiveOAuthRequest request);
 }

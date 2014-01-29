@@ -1,6 +1,6 @@
 package com.jivesoftware.jivesdk.api;
 
-import com.jivesoftware.externalclient.JiveOAuthClient;
+import com.jivesoftware.jivesdk.api.oauth.JiveOAuthClient;
 import com.jivesoftware.jivesdk.impl.auth.jiveauth.JiveInstanceOAuthTokenRefresher;
 import com.jivesoftware.jivesdk.impl.http.*;
 import com.jivesoftware.jivesdk.impl.http.JiveAuthorizationValidatorImpl;

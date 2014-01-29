@@ -1,7 +1,7 @@
 package com.jivesoftware.jivesdk.impl.utils;
 
 import com.google.common.base.Optional;
-import com.jivesoftware.externalclient.JiveOAuthResponse;
+import com.jivesoftware.jivesdk.api.oauth.JiveOAuthResponse;
 import com.jivesoftware.jivesdk.impl.http.HttpResponse;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.JsonNode;

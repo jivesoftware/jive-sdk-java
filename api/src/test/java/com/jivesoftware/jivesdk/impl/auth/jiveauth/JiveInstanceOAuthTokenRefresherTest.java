@@ -16,7 +16,7 @@
 package com.jivesoftware.jivesdk.impl.auth.jiveauth;
 
 import com.google.common.base.Optional;
-import com.jivesoftware.externalclient.JiveOAuthResponse;
+import com.jivesoftware.jivesdk.api.oauth.JiveOAuthResponse;
 import com.jivesoftware.jivesdk.api.InvalidRequestException;
 import com.jivesoftware.jivesdk.api.RestAccessException;
 import com.jivesoftware.jivesdk.api.TileInstance;
