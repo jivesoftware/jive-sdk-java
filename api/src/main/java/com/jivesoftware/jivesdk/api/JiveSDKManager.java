@@ -5,14 +5,12 @@ import com.jivesoftware.jivesdk.impl.auth.jiveauth.JiveInstanceOAuthTokenRefresh
 import com.jivesoftware.jivesdk.impl.http.*;
 import com.jivesoftware.jivesdk.impl.http.JiveAuthorizationValidatorImpl;
 
-import javax.inject.Singleton;
 
 /**
  * This is the main entry point to the jive sdk.  All object instances are created from this class
  * and can be retrieved from the appopriate methods.
  *
  */
-@Singleton
 public class JiveSDKManager {
 	public static JiveSDKManager instance = new JiveSDKManager();
 	private final RestDriverImpl restDriver;

@@ -6,10 +6,7 @@ import com.jivesoftware.jivesdk.api.RegisteredInstance;
 import javax.annotation.Nonnull;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Zvoykish
- * Date: 21/7/13
- * Time: 1:15 PM
+ * An example data object to storeconnection details for the jive instance.
  */
 public class JiveInstance implements RegisteredInstance {
     protected long id;
@@ -125,8 +122,4 @@ public class JiveInstance implements RegisteredInstance {
         this.id = id;
     }
 
-    @Override
-    public boolean isNew() {
-        return this.getId() == -1;
-    }
 }

@@ -3,12 +3,9 @@ package com.jivesoftware.jivesdk.api;
 import javax.annotation.Nonnull;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Zvoykish
- * Date: 21/7/13
- * Time: 1:08 PM
+ * The connection details for a jive instance.
  */
-public interface RegisteredInstance extends EntityBase {
+public interface RegisteredInstance {
     @Nonnull
     String getTenantId();
 
@@ -31,4 +28,8 @@ public interface RegisteredInstance extends EntityBase {
 
     @Nonnull
     String toSimpleString();
+
+	long getId();
+
+	void setId(long id);
 }

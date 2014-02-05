@@ -3,10 +3,7 @@ package com.jivesoftware.jivesdk.api;
 import javax.annotation.Nonnull;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Zvoykish
- * Date: 27/1/13
- * Time: 5:23 PM
+ * Interface representing oauth credentials.
  */
 public interface Credentials {
     @Nonnull

@@ -6,10 +6,7 @@ import javax.annotation.Nonnull;
 import javax.ws.rs.core.Response;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Zvoykish
- * Date: 21/7/13
- * Time: 1:39 PM
+ * Handler to implement to store registration into a local datastore.
  */
 public interface InstanceRegistrationHandler {
     RegisteredInstance register(@Nonnull InstanceRegistrationRequest request);
