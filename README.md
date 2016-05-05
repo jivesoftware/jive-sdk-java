@@ -4,6 +4,13 @@ This SDK compromises of a series of sample projects that can be used for Jive ad
 
 ---
 
+<img align="right" src="https://github.com/jivesoftware/jive-sdk-python/blob/master/dev_logo.png?raw=true?raw=true" width="128">
+## Jive iPaaS
+* This SDK was built to help simplify Jive add-on creation, deployment and management.  An iPaaS for managed Jive solutions in Java!
+* Check out the product [ipaas.jivesoftware.com](https://ipaas.jivesoftware.com)
+
+---
+
 <img align="right" src="https://github.com/jivesoftware/jive-sdk-java-springboot/blob/master/sdk-logo.png?raw=true" width="128">
 ## Jive SDK - Java w/SpringBoot
 * This SDK was built in 2016 to demonstrate streamlining add-on services with SpringBoot + JPA
