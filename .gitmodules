@@ -1,0 +1,6 @@
+[submodule "examples/jive-sdk-java-springboot"]
+	path = examples/jive-sdk-java-springboot
+	url = git@github.com:jivesoftware/jive-sdk-java-springboot.git
+[submodule "examples/jive-sdk-java-jersey"]
+	path = examples/jive-sdk-java-jersey
+	url = git@github.com:jivesoftware/jive-sdk-java-jersey.git
